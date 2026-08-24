@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#050b12">
+<title>JARVIS Calculator V3</title>
+
+<style>
+:root{
+  --bg:#03070b;
+  --panel:#07111a;
+  --panel2:#0b1823;
+  --panel3:#0e202c;
+  --text:#eaffff;
+  --muted:#6f91a1;
+  --cyan:#00eaff;
+  --blue:#1688ff;
+  --green:#00ff9d;
+  --red:#ff5277;
+  --yellow:#ffd166;
+  --border:rgba(0,234,255,.16);
+  --glow:0 0 25px rgba(0,234,255,.16);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(0,234,255,.15),transparent 35%),
+    radial-gradient(circle at 0 100%,rgba(0,100,255,.10),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.035;
+  background:
+    linear-gradient(rgba(0,234,255,.5) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,234,255,.5) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+.app{
+  width:min(1100px,100%);
+  margin:auto;
+  min-height:100vh;
+}
+
+/* HEADER */
+
+.header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 18px;
+  border-bottom:1px solid var(--border);
+  background:rgba(3,7,11,.88);
+  backdrop-filter:blur(15px);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.arc{
+  width:42px;
+  height:42px;
+  border:2px solid var(--cyan);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--cyan);
+  box-shadow:0 0 20px rgba(0,234,255,.4);
+  font-weight:900;
+}
+
+.brand h1{
+  font-size:17px;
+  letter-spacing:2px;
+}
+
+.brand small{
+  display:block;
+  color:var(--cyan);
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+.headerButtons{
+  display:flex;
+  gap:7px;
+}
+
+.icon{
+  width:40px;
+  height:40px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--panel2);
+  color:var(--cyan);
+  cursor:pointer;
+}
+
+/* NAV */
+
+.nav{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+}
+
+.nav button{
+  flex:0 0 auto;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--muted);
+  padding:9px 14px;
+  border-radius:20px;
+}
+
+.nav button.active{
+  color:#001014;
+  background:var(--cyan);
+  box-shadow:0 0 18px rgba(0,234,255,.25);
+}
+
+/* VIEWS */
+
+.view{
+  display:none;
+  padding:14px;
+}
+
+.view.active{
+  display:block;
+}
+
+/* CALCULATOR */
+
+.calcGrid{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:14px;
+}
+
+.display{
+  min-height:190px;
+  padding:22px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:linear-gradient(145deg,var(--panel),var(--panel2));
+  box-shadow:var(--glow);
+  margin-bottom:10px;
+}
+
+.system{
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--green);
+}
+
+.expression{
+  min-height:45px;
+  margin-top:22px;
+  text-align:right;
+  font-size:18px;
+  color:var(--muted);
+  overflow-x:auto;
+  white-space:nowrap;
+}
+
+.answer{
+  margin-top:5px;
+  text-align:right;
+  font-size:43px;
+  font-weight:700;
+  color:var(--text);
+  overflow-x:auto;
+  white-space:nowrap;
+}
+
+.answer.flash{
+  animation:flash .35s;
+}
+
+@keyframes flash{
+  50%{
+    color:var(--cyan);
+    text-shadow:0 0 20px var(--cyan);
+  }
+}
+
+.modeLine{
+  margin-top:15px;
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.modeLine span{
+  color:var(--cyan);
+}
+
+/* KEYPAD */
+
+.scientific{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:7px;
+  margin-bottom:8px;
+}
+
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+.key,
+.sci{
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:var(--text);
+  border-radius:12px;
+  min-height:52px;
+  font-size:16px;
+  font-weight:600;
+  transition:.12s;
+}
+
+.sci{
+  min-height:42px;
+  font-size:12px;
+  color:var(--cyan);
+}
+
+.key:active,
+.sci:active,
+.icon:active{
+  transform:scale(.94);
+}
+
+.operator{
+  color:var(--cyan);
+  background:var(--panel3);
+}
+
+.danger{
+  color:var(--red);
+}
+
+.equal{
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  color:#001014;
+  border:0;
+  font-size:22px;
+}
+
+.zero{
+  grid-column:span 2;
+}
+
+/* JARVIS PANEL */
+
+.jarvisPanel{
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--panel);
+  padding:18px;
+  min-height:100%;
+}
+
+.jarvisCore{
+  height:180px;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+
+.core{
+  width:105px;
+  height:105px;
+  border:2px solid var(--cyan);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  box-shadow:
+    0 0 15px var(--cyan),
+    inset 0 0 25px rgba(0,234,255,.25);
+  animation:pulse 2s infinite;
+}
+
+.core:before,
+.core:after{
+  content:"";
+  position:absolute;
+  border:1px solid rgba(0,234,255,.3);
+  border-radius:50%;
+}
+
+.core:before{
+  width:145px;
+  height:145px;
+}
+
+.core:after{
+  width:180px;
+  height:180px;
+}
+
+@keyframes pulse{
+  50%{
+    transform:scale(1.05);
+    box-shadow:
+      0 0 35px var(--cyan),
+      inset 0 0 30px rgba(0,234,255,.35);
+  }
+}
+
+.jarvisStatus{
+  text-align:center;
+  color:var(--cyan);
+  letter-spacing:2px;
+  font-size:11px;
+}
+
+.commandBox{
+  margin-top:20px;
+}
+
+.commandBox input{
+  width:100%;
+  background:#02070b;
+  color:var(--text);
+  border:1px solid var(--border);
+  padding:13px;
+  border-radius:10px;
+  outline:none;
+}
+
+.commandBox button{
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border:1px solid var(--cyan);
+  background:transparent;
+  color:var(--cyan);
+  border-radius:10px;
+}
+
+/* TOOLS */
+
+.tools{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.card{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  background:var(--panel);
+}
+
+.card h3{
+  color:var(--cyan);
+  margin-bottom:12px;
+}
+
+.card input,
+.card select{
+  width:100%;
+  padding:11px;
+  margin:4px 0;
+  background:#02070b;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:9px;
+  outline:none;
+}
+
+.card button{
+  width:100%;
+  margin-top:7px;
+  padding:11px;
+  border:1px solid var(--cyan);
+  color:var(--cyan);
+  background:transparent;
+  border-radius:9px;
+}
+
+.output{
+  margin-top:10px;
+  padding:12px;
+  background:#02070b;
+  border-radius:9px;
+  color:var(--green);
+  min-height:40px;
+  overflow:auto;
+}
+
+/* HISTORY */
+
+.historyItem{
+  padding:13px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:12px;
+  margin-bottom:8px;
+}
+
+.historyItem .exp{
+  color:var(--muted);
+}
+
+.historyItem .ans{
+  color:var(--cyan);
+  font-size:20px;
+  margin-top:4px;
+}
+
+/* GRAPH */
+
+canvas{
+  width:100%;
+  height:350px;
+  background:#02070b;
+  border:1px solid var(--border);
+  border-radius:15px;
+}
+
+.graphControls{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.graphControls input{
+  padding:11px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+/* MATRIX */
+
+.matrixGrid{
+  display:grid;
+  gap:5px;
+  margin:10px 0;
+}
+
+.matrixGrid input{
+  text-align:center;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:800px){
+
+  .calcGrid{
+    grid-template-columns:1fr;
+  }
+
+  .jarvisPanel{
+    min-height:300px;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .view{
+    padding:9px;
+  }
+
+  .answer{
+    font-size:34px;
+  }
+
+  .tools{
+    grid-template-columns:1fr;
+  }
+
+  .scientific{
+    grid-template-columns:repeat(5,1fr);
+  }
+
+  .sci{
+    font-size:10px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+  <div class="brand">
+    <div class="arc">J</div>
+    <div>
+      <h1>JARVIS CALCULATOR</h1>
+      <small>COMPUTATIONAL CORE V3.0</small>
+    </div>
+  </div>
+
+  <div class="headerButtons">
+    <button class="icon" onclick="toggleAngle()" id="angle">DEG</button>
+    <button class="icon" onclick="toggleVoice()">🎙</button>
+    <button class="icon" onclick="toggleTheme()">◐</button>
+  </div>
+
+</header>
+
+
+<nav class="nav">
+
+<button class="active" onclick="showView('calc',this)">CALC</button>
+<button onclick="showView('tools',this)">TOOLS</button>
+<button onclick="showView('graph',this)">GRAPH</button>
+<button onclick="showView('matrix',this)">MATRIX</button>
+<button onclick="showView('history',this)">HISTORY</button>
+
+</nav>
+
+
+<!-- =====================================================
+     CALCULATOR
+===================================================== -->
+
+<section id="calc" class="view active">
+
+<div class="calcGrid">
+
+<div>
+
+<div class="display">
+
+<div class="system">JARVIS // READY</div>
+
+<div class="expression" id="expression">0</div>
+
+<div class="answer" id="answer">0</div>
+
+<div class="modeLine">
+<span>ANGLE: <b id="angleMode">DEG</b></span>
+<span>ANS: <b id="ansValue">0</b></span>
+</div>
+
+</div>
+
+
+<div class="scientific">
+
+<button class="sci" onclick="insert('sin(')">sin</button>
+<button class="sci" onclick="insert('cos(')">cos</button>
+<button class="sci" onclick="insert('tan(')">tan</button>
+<button class="sci" onclick="insert('asin(')">sin⁻¹</button>
+<button class="sci" onclick="insert('acos(')">cos⁻¹</button>
+
+<button class="sci" onclick="insert('log(')">log</button>
+<button class="sci" onclick="insert('ln(')">ln</button>
+<button class="sci" onclick="insert('sqrt(')">√</button>
+<button class="sci" onclick="insert('cbrt(')">∛</button>
+<button class="sci" onclick="insert('abs(')">abs</button>
+
+<button class="sci" onclick="insert('π')">π</button>
+<button class="sci" onclick="insert('e')">e</button>
+<button class="sci" onclick="insert('^')">xʸ</button>
+<button class="sci" onclick="insert('!')">x!</button>
+<button class="sci" onclick="insert('%')">%</button>
+
+</div>
+
+
+<div class="keypad">
+
+<button class="key danger" onclick="clearCalc()">AC</button>
+<button class="key danger" onclick="backspace()">⌫</button>
+<button class="key operator" onclick="insert('(')">(</button>
+<button class="key operator" onclick="insert(')')">)</button>
+
+<button class="key" onclick="insert('7')">7</button>
+<button class="key" onclick="insert('8')">8</button>
+<button class="key" onclick="insert('9')">9</button>
+<button class="key operator" onclick="insert('÷')">÷</button>
+
+<button class="key" onclick="insert('4')">4</button>
+<button class="key" onclick="insert('5')">5</button>
+<button class="key" onclick="insert('6')">6</button>
+<button class="key operator" onclick="insert('×')">×</button>
+
+<button class="key" onclick="insert('1')">1</button>
+<button class="key" onclick="insert('2')">2</button>
+<button class="key" onclick="insert('3')">3</button>
+<button class="key operator" onclick="insert('−')">−</button>
+
+<button class="key zero" onclick="insert('0')">0</button>
+<button class="key" onclick="insert('.')">.</button>
+<button class="key operator" onclick="insert('+')">+</button>
+
+<button class="key operator" onclick="insert('Ans')">Ans</button>
+<button class="key operator" onclick="insert('^2')">x²</button>
+<button class="key equal" onclick="calculate()">=</button>
+
+</div>
+
+</div>
+
+
+<!-- JARVIS -->
+
+<div class="jarvisPanel">
+
+<div class="jarvisCore">
+
+<div class="core">JARVIS</div>
+
+</div>
+
+<div class="jarvisStatus" id="jarvisStatus">
+SYSTEM ONLINE
+</div>
+
+<div class="commandBox">
+
+<input
+id="command"
+placeholder="Ask JARVIS: sqrt 144, 25 percent of 800..."
+onkeydown="if(event.key==='Enter')runCommand()">
+
+<button onclick="runCommand()">
+EXECUTE COMMAND
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TOOLS
+===================================================== -->
+
+<section id="tools" class="view">
+
+<div class="tools">
+
+<div class="card">
+
+<h3>Statistics</h3>
+
+<input id="statsInput"
+placeholder="12, 15, 18, 21">
+
+<button onclick="statistics()">
+ANALYZE DATA
+</button>
+
+<div class="output" id="statsOutput"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Percentage</h3>
+
+<input id="percentA" type="number" placeholder="Value">
+
+<input id="percentB" type="number" placeholder="Percent">
+
+<button onclick="percentage()">
+CALCULATE
+</button>
+
+<div class="output" id="percentOutput"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Unit Converter</h3>
+
+<input id="unitValue" type="number" placeholder="Value">
+
+<select id="unitFrom">
+<option value="km">Kilometers</option>
+<option value="m">Meters</option>
+<option value="cm">Centimeters</option>
+<option value="mile">Miles</option>
+<option value="kg">Kilograms</option>
+<option value="g">Grams</option>
+<option value="lb">Pounds</option>
+</select>
+
+<select id="unitTo">
+<option value="m">Meters</option>
+<option value="km">Kilometers</option>
+<option value="cm">Centimeters</option>
+<option value="mile">Miles</option>
+<option value="kg">Kilograms</option>
+<option value="g">Grams</option>
+<option value="lb">Pounds</option>
+</select>
+
+<button onclick="convertUnit()">
+CONVERT
+</button>
+
+<div class="output" id="unitOutput"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Quadratic Solver</h3>
+
+<input id="qa" type="number" placeholder="a">
+
+<input id="qb" type="number" placeholder="b">
+
+<input id="qc" type="number" placeholder="c">
+
+<button onclick="quadratic()">
+SOLVE ax² + bx + c = 0
+</button>
+
+<div class="output" id="quadOutput"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     GRAPH
+===================================================== -->
+
+<section id="graph" class="view">
+
+<div class="card">
+
+<h3>Function Plotter</h3>
+
+<div class="graphControls">
+
+<input id="fx" value="sin(x)" placeholder="Example: sin(x)*x">
+
+<input id="range" type="number" value="10" placeholder="Range">
+
+<button onclick="plotGraph()">PLOT</button>
+
+</div>
+
+<canvas id="graphCanvas"></canvas>
+
+<p style="color:var(--muted);margin-top:8px;font-size:12px">
+Use x as variable. Examples: x², sin(x), x*x, sqrt(abs(x)).
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     MATRIX
+===================================================== -->
+
+<section id="matrix" class="view">
+
+<div class="card">
+
+<h3>2 × 2 Matrix Calculator</h3>
+
+<div class="matrixGrid"
+style="grid-template-columns:repeat(2,1fr);max-width:300px">
+
+<input id="m11" value="1">
+<input id="m12" value="2">
+<input id="m21" value="3">
+<input id="m22" value="4">
+
+</div>
+
+<button onclick="matrixDeterminant()">DETERMINANT</button>
+
+<button onclick="matrixInverse()">INVERSE</button>
+
+<div class="output" id="matrixOutput"></div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     HISTORY
+===================================================== -->
+
+<section id="history" class="view">
+
+<div class="card">
+
+<h3>Calculation History</h3>
+
+<button onclick="clearHistory()">CLEAR HISTORY</button>
+
+<div id="historyList" style="margin-top:12px"></div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CORE STATE
+========================================================= */
+
+let expression="";
+let answer=0;
+let angleMode="DEG";
+let history=[];
+let dark=true;
+let voiceEnabled=false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const expressionEl=
+document.getElementById("expression");
+
+const answerEl=
+document.getElementById("answer");
+
+const ansValueEl=
+document.getElementById("ansValue");
+
+const angleModeEl=
+document.getElementById("angleMode");
+
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function load(){
+
+try{
+
+history=
+JSON.parse(localStorage.getItem("jarvis_history")||"[]");
+
+answer=
+Number(localStorage.getItem("jarvis_answer")||0);
+
+}catch{
+
+history=[];
+answer=0;
+
+}
+
+renderHistory();
+
+}
+
+function save(){
+
+localStorage.setItem(
+"jarvis_history",
+JSON.stringify(history)
+);
+
+localStorage.setItem(
+"jarvis_answer",
+answer
+);
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showView(id,button){
+
+document
+.querySelectorAll(".view")
+.forEach(v=>v.classList.remove("active"));
+
+document
+.querySelectorAll(".nav button")
+.forEach(b=>b.classList.remove("active"));
+
+document
+.getElementById(id)
+.classList.add("active");
+
+button.classList.add("active");
+
+}
+
+
+/* =========================================================
+   INSERT
+========================================================= */
+
+function insert(value){
+
+expression+=value;
+
+update();
+
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update(){
+
+expressionEl.textContent=
+expression||"0";
+
+if(expression){
+
+try{
+
+const value=evaluate(expression);
+
+answerEl.textContent=
+format(value);
+
+}catch{
+
+answerEl.textContent="…";
+
+}
+
+}else{
+
+answerEl.textContent=
+format(answer);
+
+}
+
+ansValueEl.textContent=
+format(answer);
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearCalc(){
+
+expression="";
+
+update();
+
+}
+
+
+/* =========================================================
+   BACKSPACE
+========================================================= */
+
+function backspace(){
+
+expression=
+expression.slice(0,-1);
+
+update();
+
+}
+
+
+/* =========================================================
+   ANGLE
+========================================================= */
+
+function toggleAngle(){
+
+angleMode=
+angleMode==="DEG"
+?"RAD"
+:"DEG";
+
+document.getElementById("angle").textContent=
+angleMode;
+
+angleModeEl.textContent=
+angleMode;
+
+update();
+
+}
+
+
+/* =========================================================
+   FACTORIAL
+========================================================= */
+
+function factorial(n){
+
+if(n<0 || n>170 ||
+!Number.isInteger(n))
+throw Error();
+
+let r=1;
+
+for(let i=2;i<=n;i++)
+r*=i;
+
+return r;
+
+}
+
+
+/* =========================================================
+   TRIG
+========================================================= */
+
+function rad(x){
+
+return angleMode==="DEG"
+?x*Math.PI/180
+:x;
+
+}
+
+function deg(x){
+
+return angleMode==="DEG"
+?x*180/Math.PI
+:x;
+
+}
+
+
+/* =========================================================
+   ENGINE
+========================================================= */
+
+function evaluate(input){
+
+let x=input;
+
+x=x
+.replace(/×/g,"*")
+.replace(/÷/g,"/")
+.replace(/−/g,"-")
+.replace(/π/g,"Math.PI")
+.replace(/\bAns\b/g,"answer")
+.replace(/\be\b/g,"Math.E");
+
+
+/* factorial */
+
+while(
+/(\d+(?:\.\d+)?|\([^()]+\))!/.test(x)
+){
+
+x=x.replace(
+/(\d+(?:\.\d+)?|\([^()]+\))!/g,
+"factorial($1)"
+);
+
+}
+
+
+/* power */
+
+x=x.replace(
+/(\([^()]+\)|\d+(?:\.\d+)?)\^(\([^()]+\)|\d+(?:\.\d+)?)/g,
+"Math.pow($1,$2)"
+);
+
+
+/* functions */
+
+x=x
+.replace(/sqrt\(/g,"Math.sqrt(")
+.replace(/cbrt\(/g,"Math.cbrt(")
+.replace(/abs\(/g,"Math.abs(")
+.replace(/log\(/g,"Math.log10(")
+.replace(/ln\(/g,"Math.log(");
+
+
+x=x
+.replace(/sin\(/g,"SIN(")
+.replace(/cos\(/g,"COS(")
+.replace(/tan\(/g,"TAN(")
+.replace(/asin\(/g,"ASIN(")
+.replace(/acos\(/g,"ACOS(");
+
+
+if(
+/[^0-9+\-*/().,_a-zA-Z]/.test(x)
+)
+throw Error("Invalid");
+
+
+const fn=
+new Function(
+"factorial",
+"answer",
+"SIN",
+"COS",
+"TAN",
+"ASIN",
+"ACOS",
+`
+"use strict";
+return (${x});
+`
+);
+
+
+return fn(
+
+factorial,
+answer,
+
+v=>Math.sin(rad(v)),
+v=>Math.cos(rad(v)),
+v=>Math.tan(rad(v)),
+
+v=>deg(Math.asin(v)),
+v=>deg(Math.acos(v))
+
+);
+
+}
+
+
+/* =========================================================
+   CALCULATE
+========================================================= */
+
+function calculate(){
+
+if(!expression)
+return;
+
+try{
+
+const oldExpression=
+expression;
+
+const value=
+evaluate(expression);
+
+if(!Number.isFinite(value))
+throw Error();
+
+answer=value;
+
+history.unshift({
+
+expression:oldExpression,
+answer:value,
+time:
