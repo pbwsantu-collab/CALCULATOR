@@ -3,1937 +3,1743 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="theme-color" content="#050b12">
-<title>JARVIS Calculator V3</title>
-
+<title>JARVIS Calculator V5 - Ultimate Edition</title>
 <style>
-:root{
-  --bg:#03070b;
-  --panel:#07111a;
-  --panel2:#0b1823;
-  --panel3:#0e202c;
-  --text:#eaffff;
-  --muted:#6f91a1;
-  --cyan:#00eaff;
-  --blue:#1688ff;
-  --green:#00ff9d;
-  --red:#ff5277;
-  --yellow:#ffd166;
-  --border:rgba(0,234,255,.16);
-  --glow:0 0 25px rgba(0,234,255,.16);
+:root {
+  --bg: #03070b;
+  --panel: #07111a;
+  --panel2: #0b1823;
+  --panel3: #0e202c;
+  --text: #eaffff;
+  --muted: #6f91a1;
+  --cyan: #00eaff;
+  --blue: #1688ff;
+  --green: #00ff9d;
+  --red: #ff5277;
+  --yellow: #ffd166;
+  --purple: #b388ff;
+  --orange: #ffab40;
+  --border: rgba(0,234,255,0.16);
+  --glow: 0 0 25px rgba(0,234,255,0.16);
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-body{
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% -10%,rgba(0,234,255,.15),transparent 35%),
-    radial-gradient(circle at 0 100%,rgba(0,100,255,.10),transparent 30%),
-    var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  overflow-x:hidden;
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% -10%, rgba(0,234,255,0.15), transparent 35%),
+              radial-gradient(circle at 0 100%, rgba(0,100,255,0.10), transparent 30%),
+              var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-x: hidden;
 }
 
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.035;
-  background:
-    linear-gradient(rgba(0,234,255,.5) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,234,255,.5) 1px,transparent 1px);
-  background-size:40px 40px;
+.app {
+  width: min(1400px, 100%);
+  margin: auto;
+  min-height: 100vh;
+  padding: 0 10px;
 }
 
-.app{
-  width:min(1100px,100%);
-  margin:auto;
-  min-height:100vh;
+/* Header */
+.header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(3,7,11,0.88);
+  backdrop-filter: blur(15px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-/* HEADER */
+.brand { display: flex; align-items: center; gap: 12px; }
+.arc {
+  width: 42px; height: 42px;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,234,255,0.4);
+  font-weight: 900;
+}
+.brand h1 { font-size: 17px; letter-spacing: 2px; }
+.brand small { display: block; color: var(--cyan); font-size: 9px; letter-spacing: 2px; }
 
-.header{
-  height:70px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px 18px;
-  border-bottom:1px solid var(--border);
-  background:rgba(3,7,11,.88);
-  backdrop-filter:blur(15px);
-  position:sticky;
-  top:0;
-  z-index:10;
+.headerButtons { display: flex; gap: 7px; flex-wrap: wrap; }
+.icon {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel2);
+  color: var(--cyan);
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: nowrap;
+}
+.nav button {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  padding: 9px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+.nav button.active {
+  color: #001014;
+  background: var(--cyan);
+  box-shadow: 0 0 18px rgba(0,234,255,0.25);
 }
 
-.arc{
-  width:42px;
-  height:42px;
-  border:2px solid var(--cyan);
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  color:var(--cyan);
-  box-shadow:0 0 20px rgba(0,234,255,.4);
-  font-weight:900;
+/* Views */
+.view { display: none; padding: 14px; }
+.view.active { display: block; }
+
+/* Calculator Grid */
+.calcGrid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 14px;
 }
 
-.brand h1{
-  font-size:17px;
-  letter-spacing:2px;
+.display {
+  min-height: 190px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: linear-gradient(145deg, var(--panel), var(--panel2));
+  box-shadow: var(--glow);
+  margin-bottom: 10px;
+}
+.system { font-size: 10px; letter-spacing: 2px; color: var(--green); }
+.expression {
+  min-height: 45px;
+  margin-top: 22px;
+  text-align: right;
+  font-size: 18px;
+  color: var(--muted);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.answer {
+  margin-top: 5px;
+  text-align: right;
+  font-size: 43px;
+  font-weight: 700;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.answer.flash { animation: flash 0.35s; }
+@keyframes flash {
+  50% { color: var(--cyan); text-shadow: 0 0 20px var(--cyan); }
+}
+.modeLine {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 10px;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.modeLine span { color: var(--cyan); }
+
+/* Scientific Buttons */
+.scientific {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.sci {
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--cyan);
+  border-radius: 10px;
+  min-height: 34px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.12s;
+}
+.sci:active { transform: scale(0.94); }
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.key {
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+  border-radius: 12px;
+  min-height: 52px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.12s;
+}
+.key:active { transform: scale(0.94); }
+.operator { color: var(--cyan); background: var(--panel3); }
+.danger { color: var(--red); }
+.equal {
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  color: #001014;
+  border: 0;
+  font-size: 22px;
+}
+.zero { grid-column: span 2; }
+
+/* Jarvis Panel */
+.jarvisPanel {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 18px;
+  min-height: 100%;
+}
+.jarvisCore {
+  height: 140px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.core {
+  width: 85px; height: 85px;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  box-shadow: 0 0 15px var(--cyan), inset 0 0 25px rgba(0,234,255,0.25);
+  animation: pulse 2s infinite;
+}
+.core:before, .core:after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(0,234,255,0.3);
+  border-radius: 50%;
+}
+.core:before { width: 125px; height: 125px; }
+.core:after { width: 160px; height: 160px; }
+@keyframes pulse {
+  50% { transform: scale(1.05); box-shadow: 0 0 35px var(--cyan), inset 0 0 30px rgba(0,234,255,0.35); }
+}
+.jarvisStatus {
+  text-align: center;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  font-size: 10px;
+}
+.commandBox { margin-top: 15px; }
+.commandBox input {
+  width: 100%;
+  background: #02070b;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  font-size: 12px;
+}
+.commandBox button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid var(--cyan);
+  background: transparent;
+  color: var(--cyan);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
 }
 
-.brand small{
-  display:block;
-  color:var(--cyan);
-  font-size:9px;
-  letter-spacing:2px;
+/* Cards */
+.tools {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--panel);
+}
+.card h3 { color: var(--cyan); margin-bottom: 10px; font-size: 13px; }
+.card input, .card select {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 3px 0;
+  background: #02070b;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  font-size: 12px;
+}
+.card button {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.card button:hover { background: rgba(0,234,255,0.08); }
+.output {
+  margin-top: 8px;
+  padding: 10px;
+  background: #02070b;
+  border-radius: 9px;
+  color: var(--green);
+  min-height: 35px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
-.headerButtons{
-  display:flex;
-  gap:7px;
+/* Graph */
+.graphContainer {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 14px;
+}
+canvas {
+  width: 100%;
+  height: 400px;
+  background: #02070b;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+.graphControls {
+  display: grid;
+  gap: 6px;
+}
+.graphControls input {
+  padding: 8px 10px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.graphControls button {
+  padding: 8px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
 }
 
-.icon{
-  width:40px;
-  height:40px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--panel2);
-  color:var(--cyan);
-  cursor:pointer;
+/* 3D Canvas */
+#canvas3d {
+  width: 100%;
+  height: 450px;
+  background: #02070b;
+  border: 1px solid var(--border);
+  border-radius: 15px;
 }
 
-/* NAV */
-
-.nav{
-  display:flex;
-  gap:6px;
-  overflow-x:auto;
-  padding:10px 14px;
-  border-bottom:1px solid var(--border);
+/* History */
+.historyItem {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 10px;
+  margin-bottom: 6px;
 }
+.historyItem .exp { color: var(--muted); font-size: 13px; }
+.historyItem .ans { color: var(--cyan); font-size: 18px; margin-top: 3px; }
 
-.nav button{
-  flex:0 0 auto;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:var(--muted);
-  padding:9px 14px;
-  border-radius:20px;
+/* Matrix */
+.matrixGrid {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0;
 }
+.matrixGrid input { text-align: center; padding: 8px; }
 
-.nav button.active{
-  color:#001014;
-  background:var(--cyan);
-  box-shadow:0 0 18px rgba(0,234,255,.25);
+/* Responsive */
+@media (max-width: 1024px) {
+  .calcGrid { grid-template-columns: 1fr; }
+  .tools { grid-template-columns: repeat(2, 1fr); }
+  .graphContainer { grid-template-columns: 1fr; }
 }
-
-/* VIEWS */
-
-.view{
-  display:none;
-  padding:14px;
-}
-
-.view.active{
-  display:block;
-}
-
-/* CALCULATOR */
-
-.calcGrid{
-  display:grid;
-  grid-template-columns:1fr 360px;
-  gap:14px;
-}
-
-.display{
-  min-height:190px;
-  padding:22px;
-  border:1px solid var(--border);
-  border-radius:18px;
-  background:linear-gradient(145deg,var(--panel),var(--panel2));
-  box-shadow:var(--glow);
-  margin-bottom:10px;
-}
-
-.system{
-  font-size:10px;
-  letter-spacing:2px;
-  color:var(--green);
-}
-
-.expression{
-  min-height:45px;
-  margin-top:22px;
-  text-align:right;
-  font-size:18px;
-  color:var(--muted);
-  overflow-x:auto;
-  white-space:nowrap;
-}
-
-.answer{
-  margin-top:5px;
-  text-align:right;
-  font-size:43px;
-  font-weight:700;
-  color:var(--text);
-  overflow-x:auto;
-  white-space:nowrap;
-}
-
-.answer.flash{
-  animation:flash .35s;
-}
-
-@keyframes flash{
-  50%{
-    color:var(--cyan);
-    text-shadow:0 0 20px var(--cyan);
-  }
-}
-
-.modeLine{
-  margin-top:15px;
-  display:flex;
-  justify-content:space-between;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.modeLine span{
-  color:var(--cyan);
-}
-
-/* KEYPAD */
-
-.scientific{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:7px;
-  margin-bottom:8px;
-}
-
-.keypad{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-}
-
-.key,
-.sci{
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:var(--text);
-  border-radius:12px;
-  min-height:52px;
-  font-size:16px;
-  font-weight:600;
-  transition:.12s;
-}
-
-.sci{
-  min-height:42px;
-  font-size:12px;
-  color:var(--cyan);
-}
-
-.key:active,
-.sci:active,
-.icon:active{
-  transform:scale(.94);
-}
-
-.operator{
-  color:var(--cyan);
-  background:var(--panel3);
-}
-
-.danger{
-  color:var(--red);
-}
-
-.equal{
-  background:linear-gradient(135deg,var(--cyan),var(--blue));
-  color:#001014;
-  border:0;
-  font-size:22px;
-}
-
-.zero{
-  grid-column:span 2;
-}
-
-/* JARVIS PANEL */
-
-.jarvisPanel{
-  border:1px solid var(--border);
-  border-radius:18px;
-  background:var(--panel);
-  padding:18px;
-  min-height:100%;
-}
-
-.jarvisCore{
-  height:180px;
-  display:grid;
-  place-items:center;
-  position:relative;
-}
-
-.core{
-  width:105px;
-  height:105px;
-  border:2px solid var(--cyan);
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  box-shadow:
-    0 0 15px var(--cyan),
-    inset 0 0 25px rgba(0,234,255,.25);
-  animation:pulse 2s infinite;
-}
-
-.core:before,
-.core:after{
-  content:"";
-  position:absolute;
-  border:1px solid rgba(0,234,255,.3);
-  border-radius:50%;
-}
-
-.core:before{
-  width:145px;
-  height:145px;
-}
-
-.core:after{
-  width:180px;
-  height:180px;
-}
-
-@keyframes pulse{
-  50%{
-    transform:scale(1.05);
-    box-shadow:
-      0 0 35px var(--cyan),
-      inset 0 0 30px rgba(0,234,255,.35);
-  }
-}
-
-.jarvisStatus{
-  text-align:center;
-  color:var(--cyan);
-  letter-spacing:2px;
-  font-size:11px;
-}
-
-.commandBox{
-  margin-top:20px;
-}
-
-.commandBox input{
-  width:100%;
-  background:#02070b;
-  color:var(--text);
-  border:1px solid var(--border);
-  padding:13px;
-  border-radius:10px;
-  outline:none;
-}
-
-.commandBox button{
-  width:100%;
-  margin-top:8px;
-  padding:12px;
-  border:1px solid var(--cyan);
-  background:transparent;
-  color:var(--cyan);
-  border-radius:10px;
-}
-
-/* TOOLS */
-
-.tools{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.card{
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px;
-  background:var(--panel);
-}
-
-.card h3{
-  color:var(--cyan);
-  margin-bottom:12px;
-}
-
-.card input,
-.card select{
-  width:100%;
-  padding:11px;
-  margin:4px 0;
-  background:#02070b;
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:9px;
-  outline:none;
-}
-
-.card button{
-  width:100%;
-  margin-top:7px;
-  padding:11px;
-  border:1px solid var(--cyan);
-  color:var(--cyan);
-  background:transparent;
-  border-radius:9px;
-}
-
-.output{
-  margin-top:10px;
-  padding:12px;
-  background:#02070b;
-  border-radius:9px;
-  color:var(--green);
-  min-height:40px;
-  overflow:auto;
-}
-
-/* HISTORY */
-
-.historyItem{
-  padding:13px;
-  border:1px solid var(--border);
-  background:var(--panel);
-  border-radius:12px;
-  margin-bottom:8px;
-}
-
-.historyItem .exp{
-  color:var(--muted);
-}
-
-.historyItem .ans{
-  color:var(--cyan);
-  font-size:20px;
-  margin-top:4px;
-}
-
-/* GRAPH */
-
-canvas{
-  width:100%;
-  height:350px;
-  background:#02070b;
-  border:1px solid var(--border);
-  border-radius:15px;
-}
-
-.graphControls{
-  display:grid;
-  grid-template-columns:1fr 1fr auto;
-  gap:8px;
-  margin-bottom:10px;
-}
-
-.graphControls input{
-  padding:11px;
-  background:var(--panel);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:8px;
-}
-
-/* MATRIX */
-
-.matrixGrid{
-  display:grid;
-  gap:5px;
-  margin:10px 0;
-}
-
-.matrixGrid input{
-  text-align:center;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:800px){
-
-  .calcGrid{
-    grid-template-columns:1fr;
-  }
-
-  .jarvisPanel{
-    min-height:300px;
-  }
-
-}
-
-@media(max-width:500px){
-
-  .view{
-    padding:9px;
-  }
-
-  .answer{
-    font-size:34px;
-  }
-
-  .tools{
-    grid-template-columns:1fr;
-  }
-
-  .scientific{
-    grid-template-columns:repeat(5,1fr);
-  }
-
-  .sci{
-    font-size:10px;
-  }
-
+@media (max-width: 700px) {
+  .tools { grid-template-columns: 1fr; }
+  .scientific { grid-template-columns: repeat(5, 1fr); }
+  .sci { font-size: 9px; min-height: 28px; }
+  .answer { font-size: 28px; }
+  .header { flex-wrap: wrap; height: auto; gap: 6px; padding: 10px; }
+  .icon { width: 34px; height: 34px; font-size: 10px; }
+  .nav button { font-size: 10px; padding: 6px 10px; }
+  .display { padding: 14px; }
 }
 </style>
 </head>
-
 <body>
 
 <div class="app">
 
+<!-- Header -->
 <header class="header">
-
   <div class="brand">
     <div class="arc">J</div>
     <div>
       <h1>JARVIS CALCULATOR</h1>
-      <small>COMPUTATIONAL CORE V3.0</small>
+      <small>ULTIMATE CORE V5.0</small>
+    </div>
+  </div>
+  <div class="headerButtons">
+    <button class="icon" onclick="toggleAngle()" id="angle">DEG</button>
+    <button class="icon" onclick="toggleComplex()" id="complexBtn">CMPLX</button>
+    <button class="icon" onclick="startVoice()">🎤</button>
+    <button class="icon" onclick="toggleTheme()">◐</button>
+    <button class="icon" onclick="exportData()">⬇</button>
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav class="nav">
+  <button class="active" onclick="showView('calc',this)">CALC</button>
+  <button onclick="showView('tools',this)">TOOLS</button>
+  <button onclick="showView('graph',this)">GRAPH</button>
+  <button onclick="showView('graph3d',this)">3D</button>
+  <button onclick="showView('matrix',this)">MATRIX</button>
+  <button onclick="showView('stats',this)">STATS</button>
+  <button onclick="showView('program',this)">CODE</button>
+  <button onclick="showView('history',this)">HIST</button>
+  <button onclick="showView('constants',this)">CONST</button>
+</nav>
+
+<!-- CALCULATOR VIEW -->
+<section id="calc" class="view active">
+<div class="calcGrid">
+  <div>
+    <div class="display">
+      <div class="system" id="systemStatus">JARVIS // READY</div>
+      <div class="expression" id="expression">0</div>
+      <div class="answer" id="answer">0</div>
+      <div class="modeLine">
+        <span>ANGLE: <b id="angleMode">DEG</b></span>
+        <span>ANS: <b id="ansValue">0</b></span>
+        <span>MODE: <b id="modeDisplay">REAL</b></span>
+      </div>
+    </div>
+
+    <div class="scientific">
+      <button class="sci" onclick="insert('sin(')">sin</button>
+      <button class="sci" onclick="insert('cos(')">cos</button>
+      <button class="sci" onclick="insert('tan(')">tan</button>
+      <button class="sci" onclick="insert('asin(')">sin⁻¹</button>
+      <button class="sci" onclick="insert('acos(')">cos⁻¹</button>
+      <button class="sci" onclick="insert('atan(')">tan⁻¹</button>
+      <button class="sci" onclick="insert('log(')">log</button>
+      <button class="sci" onclick="insert('ln(')">ln</button>
+      <button class="sci" onclick="insert('sqrt(')">√</button>
+      <button class="sci" onclick="insert('cbrt(')">∛</button>
+      <button class="sci" onclick="insert('abs(')">abs</button>
+      <button class="sci" onclick="insert('factorial(')">x!</button>
+      <button class="sci" onclick="insert('π')">π</button>
+      <button class="sci" onclick="insert('e')">e</button>
+      <button class="sci" onclick="insert('^')">xʸ</button>
+      <button class="sci" onclick="insert('i')">i</button>
+      <button class="sci" onclick="insert('conj(')">conj</button>
+      <button class="sci" onclick="insert('arg(')">arg</button>
+      <button class="sci" onclick="insert('integrate(')">∫</button>
+      <button class="sci" onclick="insert('diff(')">d/dx</button>
+      <button class="sci" onclick="insert('sum(')">Σ</button>
+      <button class="sci" onclick="insert('prod(')">Π</button>
+      <button class="sci" onclick="insert('rand(')">rand</button>
+      <button class="sci" onclick="insert('mod(')">mod</button>
+    </div>
+
+    <div class="keypad">
+      <button class="key danger" onclick="clearCalc()">AC</button>
+      <button class="key danger" onclick="backspace()">⌫</button>
+      <button class="key operator" onclick="insert('(')">(</button>
+      <button class="key operator" onclick="insert(')')">)</button>
+      <button class="key" onclick="insert('7')">7</button>
+      <button class="key" onclick="insert('8')">8</button>
+      <button class="key" onclick="insert('9')">9</button>
+      <button class="key operator" onclick="insert('÷')">÷</button>
+      <button class="key" onclick="insert('4')">4</button>
+      <button class="key" onclick="insert('5')">5</button>
+      <button class="key" onclick="insert('6')">6</button>
+      <button class="key operator" onclick="insert('×')">×</button>
+      <button class="key" onclick="insert('1')">1</button>
+      <button class="key" onclick="insert('2')">2</button>
+      <button class="key" onclick="insert('3')">3</button>
+      <button class="key operator" onclick="insert('−')">−</button>
+      <button class="key zero" onclick="insert('0')">0</button>
+      <button class="key" onclick="insert('.')">.</button>
+      <button class="key operator" onclick="insert('+')">+</button>
+      <button class="key operator" onclick="insert('Ans')">Ans</button>
+      <button class="key operator" onclick="insert('^2')">x²</button>
+      <button class="key equal" onclick="calculate()">=</button>
     </div>
   </div>
 
-  <div class="headerButtons">
-    <button class="icon" onclick="toggleAngle()" id="angle">DEG</button>
-    <button class="icon" onclick="toggleVoice()">🎙</button>
-    <button class="icon" onclick="toggleTheme()">◐</button>
+  <!-- JARVIS Panel -->
+  <div class="jarvisPanel">
+    <div class="jarvisCore"><div class="core">JARVIS</div></div>
+    <div class="jarvisStatus" id="jarvisStatus">SYSTEM ONLINE</div>
+    <div class="commandBox">
+      <input id="command" placeholder="Natural language: solve, integrate, factor, plot..." onkeydown="if(event.key==='Enter')runCommand()">
+      <button onclick="runCommand()">EXECUTE</button>
+      <button onclick="runScript()" style="margin-top:4px;border-color:var(--purple);color:var(--purple);">RUN SCRIPT</button>
+    </div>
   </div>
-
-</header>
-
-
-<nav class="nav">
-
-<button class="active" onclick="showView('calc',this)">CALC</button>
-<button onclick="showView('tools',this)">TOOLS</button>
-<button onclick="showView('graph',this)">GRAPH</button>
-<button onclick="showView('matrix',this)">MATRIX</button>
-<button onclick="showView('history',this)">HISTORY</button>
-
-</nav>
-
-
-<!-- =====================================================
-     CALCULATOR
-===================================================== -->
-
-<section id="calc" class="view active">
-
-<div class="calcGrid">
-
-<div>
-
-<div class="display">
-
-<div class="system">JARVIS // READY</div>
-
-<div class="expression" id="expression">0</div>
-
-<div class="answer" id="answer">0</div>
-
-<div class="modeLine">
-<span>ANGLE: <b id="angleMode">DEG</b></span>
-<span>ANS: <b id="ansValue">0</b></span>
 </div>
-
-</div>
-
-
-<div class="scientific">
-
-<button class="sci" onclick="insert('sin(')">sin</button>
-<button class="sci" onclick="insert('cos(')">cos</button>
-<button class="sci" onclick="insert('tan(')">tan</button>
-<button class="sci" onclick="insert('asin(')">sin⁻¹</button>
-<button class="sci" onclick="insert('acos(')">cos⁻¹</button>
-
-<button class="sci" onclick="insert('log(')">log</button>
-<button class="sci" onclick="insert('ln(')">ln</button>
-<button class="sci" onclick="insert('sqrt(')">√</button>
-<button class="sci" onclick="insert('cbrt(')">∛</button>
-<button class="sci" onclick="insert('abs(')">abs</button>
-
-<button class="sci" onclick="insert('π')">π</button>
-<button class="sci" onclick="insert('e')">e</button>
-<button class="sci" onclick="insert('^')">xʸ</button>
-<button class="sci" onclick="insert('!')">x!</button>
-<button class="sci" onclick="insert('%')">%</button>
-
-</div>
-
-
-<div class="keypad">
-
-<button class="key danger" onclick="clearCalc()">AC</button>
-<button class="key danger" onclick="backspace()">⌫</button>
-<button class="key operator" onclick="insert('(')">(</button>
-<button class="key operator" onclick="insert(')')">)</button>
-
-<button class="key" onclick="insert('7')">7</button>
-<button class="key" onclick="insert('8')">8</button>
-<button class="key" onclick="insert('9')">9</button>
-<button class="key operator" onclick="insert('÷')">÷</button>
-
-<button class="key" onclick="insert('4')">4</button>
-<button class="key" onclick="insert('5')">5</button>
-<button class="key" onclick="insert('6')">6</button>
-<button class="key operator" onclick="insert('×')">×</button>
-
-<button class="key" onclick="insert('1')">1</button>
-<button class="key" onclick="insert('2')">2</button>
-<button class="key" onclick="insert('3')">3</button>
-<button class="key operator" onclick="insert('−')">−</button>
-
-<button class="key zero" onclick="insert('0')">0</button>
-<button class="key" onclick="insert('.')">.</button>
-<button class="key operator" onclick="insert('+')">+</button>
-
-<button class="key operator" onclick="insert('Ans')">Ans</button>
-<button class="key operator" onclick="insert('^2')">x²</button>
-<button class="key equal" onclick="calculate()">=</button>
-
-</div>
-
-</div>
-
-
-<!-- JARVIS -->
-
-<div class="jarvisPanel">
-
-<div class="jarvisCore">
-
-<div class="core">JARVIS</div>
-
-</div>
-
-<div class="jarvisStatus" id="jarvisStatus">
-SYSTEM ONLINE
-</div>
-
-<div class="commandBox">
-
-<input
-id="command"
-placeholder="Ask JARVIS: sqrt 144, 25 percent of 800..."
-onkeydown="if(event.key==='Enter')runCommand()">
-
-<button onclick="runCommand()">
-EXECUTE COMMAND
-</button>
-
-</div>
-
-</div>
-
-</div>
-
 </section>
 
-
-<!-- =====================================================
-     TOOLS
-===================================================== -->
-
+<!-- TOOLS VIEW -->
 <section id="tools" class="view">
-
 <div class="tools">
-
-<div class="card">
-
-<h3>Statistics</h3>
-
-<input id="statsInput"
-placeholder="12, 15, 18, 21">
-
-<button onclick="statistics()">
-ANALYZE DATA
-</button>
-
-<div class="output" id="statsOutput"></div>
-
+  <div class="card">
+    <h3>🔢 Equation Solver</h3>
+    <input id="eqInput" placeholder="x^2 - 4 = 0">
+    <button onclick="solveEquation()">SOLVE</button>
+    <div class="output" id="eqOutput"></div>
+  </div>
+  <div class="card">
+    <h3>∫ Calculus</h3>
+    <input id="calcFunc" placeholder="x^2" value="x^2">
+    <input id="calcFrom" type="number" placeholder="From" value="0">
+    <input id="calcTo" type="number" placeholder="To" value="1">
+    <button onclick="doCalculus()">INTEGRATE / DIFFERENTIATE</button>
+    <div class="output" id="calcOutput"></div>
+  </div>
+  <div class="card">
+    <h3>📊 Statistics</h3>
+    <input id="statsInput" placeholder="12, 15, 18, 21, 24">
+    <button onclick="statistics()">ANALYZE</button>
+    <div class="output" id="statsOutput"></div>
+  </div>
+  <div class="card">
+    <h3>💯 Percentage</h3>
+    <input id="percentA" type="number" placeholder="Value">
+    <input id="percentB" type="number" placeholder="Percent">
+    <button onclick="percentage()">CALCULATE</button>
+    <div class="output" id="percentOutput"></div>
+  </div>
+  <div class="card">
+    <h3>📏 Unit Converter</h3>
+    <input id="unitValue" type="number" placeholder="Value">
+    <select id="unitFrom"><option value="km">km</option><option value="m">m</option><option value="cm">cm</option><option value="mile">miles</option><option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option></select>
+    <select id="unitTo"><option value="m">m</option><option value="km">km</option><option value="cm">cm</option><option value="mile">miles</option><option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option></select>
+    <button onclick="convertUnit()">CONVERT</button>
+    <div class="output" id="unitOutput"></div>
+  </div>
+  <div class="card">
+    <h3>🔢 Prime Numbers</h3>
+    <input id="primeInput" type="number" placeholder="Number" value="100">
+    <button onclick="primeCheck()">CHECK / FACTOR</button>
+    <div class="output" id="primeOutput"></div>
+  </div>
 </div>
-
-
-<div class="card">
-
-<h3>Percentage</h3>
-
-<input id="percentA" type="number" placeholder="Value">
-
-<input id="percentB" type="number" placeholder="Percent">
-
-<button onclick="percentage()">
-CALCULATE
-</button>
-
-<div class="output" id="percentOutput"></div>
-
-</div>
-
-
-<div class="card">
-
-<h3>Unit Converter</h3>
-
-<input id="unitValue" type="number" placeholder="Value">
-
-<select id="unitFrom">
-<option value="km">Kilometers</option>
-<option value="m">Meters</option>
-<option value="cm">Centimeters</option>
-<option value="mile">Miles</option>
-<option value="kg">Kilograms</option>
-<option value="g">Grams</option>
-<option value="lb">Pounds</option>
-</select>
-
-<select id="unitTo">
-<option value="m">Meters</option>
-<option value="km">Kilometers</option>
-<option value="cm">Centimeters</option>
-<option value="mile">Miles</option>
-<option value="kg">Kilograms</option>
-<option value="g">Grams</option>
-<option value="lb">Pounds</option>
-</select>
-
-<button onclick="convertUnit()">
-CONVERT
-</button>
-
-<div class="output" id="unitOutput"></div>
-
-</div>
-
-
-<div class="card">
-
-<h3>Quadratic Solver</h3>
-
-<input id="qa" type="number" placeholder="a">
-
-<input id="qb" type="number" placeholder="b">
-
-<input id="qc" type="number" placeholder="c">
-
-<button onclick="quadratic()">
-SOLVE ax² + bx + c = 0
-</button>
-
-<div class="output" id="quadOutput"></div>
-
-</div>
-
-</div>
-
 </section>
 
-
-<!-- =====================================================
-     GRAPH
-===================================================== -->
-
+<!-- GRAPH VIEW -->
 <section id="graph" class="view">
-
 <div class="card">
-
-<h3>Function Plotter</h3>
-
-<div class="graphControls">
-
-<input id="fx" value="sin(x)" placeholder="Example: sin(x)*x">
-
-<input id="range" type="number" value="10" placeholder="Range">
-
-<button onclick="plotGraph()">PLOT</button>
-
+  <h3>📈 Function Plotter</h3>
+  <div class="graphContainer">
+    <canvas id="graphCanvas"></canvas>
+    <div class="graphControls">
+      <input id="fx" value="sin(x)" placeholder="f(x)">
+      <input id="fx2" value="" placeholder="g(x) (optional)">
+      <input id="rangeMin" type="number" value="-10" placeholder="Min X">
+      <input id="rangeMax" type="number" value="10" placeholder="Max X">
+      <button onclick="plotGraph()">PLOT</button>
+      <button onclick="findRoots()">FIND ROOTS</button>
+      <button onclick="exportGraph()">📥 EXPORT</button>
+      <div class="output" id="graphOutput" style="font-size:11px;min-height:30px;"></div>
+    </div>
+  </div>
 </div>
-
-<canvas id="graphCanvas"></canvas>
-
-<p style="color:var(--muted);margin-top:8px;font-size:12px">
-Use x as variable. Examples: x², sin(x), x*x, sqrt(abs(x)).
-</p>
-
-</div>
-
 </section>
 
+<!-- 3D GRAPH VIEW -->
+<section id="graph3d" class="view">
+<div class="card">
+  <h3>🌐 3D Function Plotter</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin-bottom:10px;">
+    <input id="f3d" value="sin(x)*cos(y)" placeholder="f(x,y)">
+    <input id="range3d" type="number" value="5" placeholder="Range">
+    <input id="res3d" type="number" value="30" placeholder="Resolution">
+    <button onclick="plot3D()">PLOT</button>
+  </div>
+  <canvas id="canvas3d"></canvas>
+</div>
+</section>
 
-<!-- =====================================================
-     MATRIX
-===================================================== -->
-
+<!-- MATRIX VIEW -->
 <section id="matrix" class="view">
-
 <div class="card">
-
-<h3>2 × 2 Matrix Calculator</h3>
-
-<div class="matrixGrid"
-style="grid-template-columns:repeat(2,1fr);max-width:300px">
-
-<input id="m11" value="1">
-<input id="m12" value="2">
-<input id="m21" value="3">
-<input id="m22" value="4">
-
+  <h3>📐 Matrix Calculator (2×2)</h3>
+  <div class="matrixGrid" style="grid-template-columns:repeat(2,1fr);max-width:300px">
+    <input id="m11" value="1"><input id="m12" value="2">
+    <input id="m21" value="3"><input id="m22" value="4">
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+    <button onclick="matrixDet()">DETERMINANT</button>
+    <button onclick="matrixInv()">INVERSE</button>
+    <button onclick="matrixEigen()">EIGENVALUES</button>
+    <button onclick="matrixTranspose()">TRANSPOSE</button>
+  </div>
+  <div class="output" id="matrixOutput"></div>
 </div>
-
-<button onclick="matrixDeterminant()">DETERMINANT</button>
-
-<button onclick="matrixInverse()">INVERSE</button>
-
-<div class="output" id="matrixOutput"></div>
-
-</div>
-
 </section>
 
+<!-- STATS VIEW -->
+<section id="stats" class="view">
+<div class="tools">
+  <div class="card">
+    <h3>📊 Distribution Calculators</h3>
+    <select id="distType" style="width:100%;padding:8px;background:#02070b;color:var(--text);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;">
+      <option value="normal">Normal Distribution</option>
+      <option value="binomial">Binomial Distribution</option>
+      <option value="poisson">Poisson Distribution</option>
+      <option value="exponential">Exponential Distribution</option>
+    </select>
+    <input id="distParam1" type="number" placeholder="μ / n" value="0">
+    <input id="distParam2" type="number" placeholder="σ / p" value="1">
+    <input id="distX" type="number" placeholder="x value" value="0">
+    <button onclick="distribution()">CALCULATE</button>
+    <div class="output" id="distOutput"></div>
+  </div>
+  <div class="card">
+    <h3>📈 Regression</h3>
+    <input id="regData" placeholder="x: 1,2,3,4 | y: 2,4,6,8">
+    <button onclick="regression()">LINEAR REGRESSION</button>
+    <div class="output" id="regOutput"></div>
+  </div>
+</div>
+</section>
 
-<!-- =====================================================
-     HISTORY
-===================================================== -->
+<!-- PROGRAMMING VIEW -->
+<section id="program" class="view">
+<div class="card">
+  <h3>💻 Script Editor</h3>
+  <textarea id="scriptArea" style="width:100%;height:200px;background:#02070b;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font-family:monospace;font-size:13px;resize:vertical;" placeholder="Write JavaScript here...&#10;Example:&#10;function f(x) { return x*x; }&#10;return f(5);">function f(x) { return x*x; }
+return f(5);</textarea>
+  <button onclick="runScript()" style="margin-top:8px;">▶ RUN SCRIPT</button>
+  <button onclick="saveScript()" style="margin-top:4px;">💾 SAVE SCRIPT</button>
+  <div class="output" id="scriptOutput"></div>
+</div>
+</section>
 
+<!-- HISTORY VIEW -->
 <section id="history" class="view">
-
 <div class="card">
-
-<h3>Calculation History</h3>
-
-<button onclick="clearHistory()">CLEAR HISTORY</button>
-
-<div id="historyList" style="margin-top:12px"></div>
-
+  <h3>📜 Calculation History</h3>
+  <button onclick="clearHistory()">CLEAR</button>
+  <button onclick="exportHistory()" style="margin-left:6px;">📥 EXPORT</button>
+  <div id="historyList" style="margin-top:10px;"></div>
 </div>
+</section>
 
+<!-- CONSTANTS VIEW -->
+<section id="constants" class="view">
+<div class="tools">
+  <div class="card">
+    <h3>🔬 Physical Constants</h3>
+    <div class="output" id="constantsOutput" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <button onclick="insert('c')">c = 299,792,458</button>
+      <button onclick="insert('h')">h = 6.626e-34</button>
+      <button onclick="insert('G')">G = 6.674e-11</button>
+      <button onclick="insert('e_charge')">e = 1.602e-19</button>
+      <button onclick="insert('m_e')">mₑ = 9.109e-31</button>
+      <button onclick="insert('m_p')">mₚ = 1.672e-27</button>
+      <button onclick="insert('R')">R = 8.314</button>
+      <button onclick="insert('N_A')">Nₐ = 6.022e23</button>
+      <button onclick="insert('k')">k = 1.381e-23</button>
+      <button onclick="insert('sigma')">σ = 5.670e-8</button>
+    </div>
+  </div>
+</div>
 </section>
 
 </div>
-
 
 <script>
-
-/* =========================================================
-   CORE STATE
-========================================================= */
-
-let expression="";
-let answer=0;
-let angleMode="DEG";
-let history=[];
-let dark=true;
-let voiceEnabled=false;
-
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const expressionEl=
-document.getElementById("expression");
-
-const answerEl=
-document.getElementById("answer");
-
-const ansValueEl=
-document.getElementById("ansValue");
-
-const angleModeEl=
-document.getElementById("angleMode");
-
-
-
-/* =========================================================
-   STORAGE
-========================================================= */
-
-function load(){
-
-try{
-
-history=
-JSON.parse(localStorage.getItem("jarvis_history")||"[]");
-
-answer=
-Number(localStorage.getItem("jarvis_answer")||0);
-
-}catch{
-
-history=[];
-answer=0;
-
-}
-
-renderHistory();
-
-}
-
-function save(){
-
-localStorage.setItem(
-"jarvis_history",
-JSON.stringify(history)
-);
-
-localStorage.setItem(
-"jarvis_answer",
-answer
-);
-
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function showView(id,button){
-
-document
-.querySelectorAll(".view")
-.forEach(v=>v.classList.remove("active"));
-
-document
-.querySelectorAll(".nav button")
-.forEach(b=>b.classList.remove("active"));
-
-document
-.getElementById(id)
-.classList.add("active");
-
-button.classList.add("active");
-
-}
-
-
-/* =========================================================
-   INSERT
-========================================================= */
-
-function insert(value){
-
-expression+=value;
-
-update();
-
-}
-
-
-/* =========================================================
-   UPDATE
-========================================================= */
-
-function update(){
-
-expressionEl.textContent=
-expression||"0";
-
-if(expression){
-
-try{
-
-const value=evaluate(expression);
-
-answerEl.textContent=
-format(value);
-
-}catch{
-
-answerEl.textContent="…";
-
-}
-
-}else{
-
-answerEl.textContent=
-format(answer);
-
-}
-
-ansValueEl.textContent=
-format(answer);
-
-}
-
-
-/* =========================================================
-   CLEAR
-========================================================= */
-
-function clearCalc(){
-
-expression="";
-
-update();
-
-}
-
-
-/* =========================================================
-   BACKSPACE
-========================================================= */
-
-function backspace(){
-
-expression=
-expression.slice(0,-1);
-
-update();
-
-}
-
-
-/* =========================================================
-   ANGLE
-========================================================= */
-
-function toggleAngle(){
-
-angleMode=
-angleMode==="DEG"
-?"RAD"
-:"DEG";
-
-document.getElementById("angle").textContent=
-angleMode;
-
-angleModeEl.textContent=
-angleMode;
-
-update();
-
-}
-
-
-/* =========================================================
-   FACTORIAL
-========================================================= */
-
-function factorial(n){
-
-if(n<0 || n>170 ||
-!Number.isInteger(n))
-throw Error();
-
-let r=1;
-
-for(let i=2;i<=n;i++)
-r*=i;
-
-return r;
-
-}
-
-
-/* =========================================================
-   TRIG
-========================================================= */
-
-function rad(x){
-
-return angleMode==="DEG"
-?x*Math.PI/180
-:x;
-
-}
-
-function deg(x){
-
-return angleMode==="DEG"
-?x*180/Math.PI
-:x;
-
-}
-
-
-/* =========================================================
-   ENGINE
-========================================================= */
-
-function evaluate(input){
-
-let x=input;
-
-x=x
-.replace(/×/g,"*")
-.replace(/÷/g,"/")
-.replace(/−/g,"-")
-.replace(/π/g,"Math.PI")
-.replace(/\bAns\b/g,"answer")
-.replace(/\be\b/g,"Math.E");
-
-
-/* factorial */
-
-while(
-/(\d+(?:\.\d+)?|\([^()]+\))!/.test(x)
-){
-
-x=x.replace(
-/(\d+(?:\.\d+)?|\([^()]+\))!/g,
-"factorial($1)"
-);
-
-}
-
-
-/* power */
-
-x=x.replace(
-/(\([^()]+\)|\d+(?:\.\d+)?)\^(\([^()]+\)|\d+(?:\.\d+)?)/g,
-"Math.pow($1,$2)"
-);
-
-
-/* functions */
-
-x=x
-.replace(/sqrt\(/g,"Math.sqrt(")
-.replace(/cbrt\(/g,"Math.cbrt(")
-.replace(/abs\(/g,"Math.abs(")
-.replace(/log\(/g,"Math.log10(")
-.replace(/ln\(/g,"Math.log(");
-
-
-x=x
-.replace(/sin\(/g,"SIN(")
-.replace(/cos\(/g,"COS(")
-.replace(/tan\(/g,"TAN(")
-.replace(/asin\(/g,"ASIN(")
-.replace(/acos\(/g,"ACOS(");
-
-
-if(
-/[^0-9+\-*/().,_a-zA-Z]/.test(x)
-)
-throw Error("Invalid");
-
-
-const fn=
-new Function(
-"factorial",
-"answer",
-"SIN",
-"COS",
-"TAN",
-"ASIN",
-"ACOS",
-`
-"use strict";
-return (${x});
-`
-);
-
-
-return fn(
-
-factorial,
-answer,
-
-v=>Math.sin(rad(v)),
-v=>Math.cos(rad(v)),
-v=>Math.tan(rad(v)),
-
-v=>deg(Math.asin(v)),
-v=>deg(Math.acos(v))
-
-);
-
-}
-
-
-/* =========================================================
-   CALCULATE
-========================================================= */
-
-function calculate(){
-
-if(!expression)
-return;
-
-try{
-
-const oldExpression=
-expression;
-
-const value=
-evaluate(expression);
-
-if(!Number.isFinite(value))
-throw Error();
-
-answer=value;
-
-history.unshift({
-
-expression:oldExpression,
-answer:value,
-time:new Date().toLocaleString()
-
-});
-
-save();
-renderHistory();
-update();
-answerEl.classList.add("flash");
-setTimeout(()=>answerEl.classList.remove("flash"),350);
-expression="";
-update();
-
-}catch{
-answerEl.textContent="ERROR";
-setTimeout(()=>update(),500);
-}
-
-}
-
-
-/* =========================================================
-   FORMAT
-========================================================= */
-
-function format(n){
-
-if(typeof n!=='number')return n;
-
-if(Number.isInteger(n))return n.toString();
-
-return n.toFixed(8).replace(/\.?0+$/,'');
-
-}
-
-
-/* =========================================================
-   HISTORY RENDER
-========================================================= */
-
-function renderHistory(){
-
-const list=
-document.getElementById("historyList");
-
-if(!list)return;
-
-list.innerHTML=
-history.map(item=>
-`
-<div class="historyItem">
-<div class="exp">${item.expression}</div>
-<div class="ans">= ${format(item.answer)}</div>
-<div style="color:var(--muted);font-size:10px">${item.time||''}</div>
-</div>
-`
-).join("");
-
-}
-
-
-/* =========================================================
-   CLEAR HISTORY
-========================================================= */
-
-function clearHistory(){
-
-history=[];
-
-save();
-
-renderHistory();
-
-}
-
-
-/* =========================================================
-   VOICE
-========================================================= */
-
-function toggleVoice(){
-
-voiceEnabled=!voiceEnabled;
-
-document.querySelector(
-'[onclick="toggleVoice()"]'
-).textContent=
-voiceEnabled?"🎙 ON":"🎙";
-
-if(voiceEnabled){
-document.getElementById("jarvisStatus").textContent=
-"🎤 VOICE INPUT ACTIVE";
-}else{
-document.getElementById("jarvisStatus").textContent=
-"SYSTEM ONLINE";
-}
-
-}
-
-
-/* =========================================================
-   THEME
-========================================================= */
-
-function toggleTheme(){
-
-dark=!dark;
-
-if(dark){
-
-document.documentElement.style.setProperty(
-"--bg","#03070b"
-);
-
-document.documentElement.style.setProperty(
-"--panel","#07111a"
-);
-
-}else{
-
-document.documentElement.style.setProperty(
-"--bg","#f0f4f8"
-);
-
-document.documentElement.style.setProperty(
-"--panel","#ffffff"
-);
-
-}
-
-}
-
-
-/* =========================================================
-   COMMAND
-========================================================= */
-
-function runCommand(){
-
-const input=
-document.getElementById("command");
-
-const cmd=
-input.value.trim();
-
-if(!cmd)
-return;
-
-try{
-
-let result;
-
-if(cmd.includes("percent of")){
-
-const parts=
-cmd.match(/(\d+\.?\d*)\s*percent of\s*(\d+\.?\d*)/i);
-
-if(parts){
-
-const p=parseFloat(parts[1]);
-const v=parseFloat(parts[2]);
-
-result=(p/100)*v;
-
-input.value=
-`${p}% of ${v} = ${format(result)}`;
-
-}
-
-}else if(cmd.includes("sqrt")){
-
-const parts=
-cmd.match(/sqrt\s*(\d+\.?\d*)/i);
-
-if(parts){
-
-result=
-Math.sqrt(parseFloat(parts[1]));
-
-input.value=
-`sqrt(${parts[1]}) = ${format(result)}`;
-
-}
-
-}else if(cmd.includes("factorial")){
-
-const parts=
-cmd.match(/factorial\s*(\d+)/i);
-
-if(parts){
-
-result=
-factorial(parseInt(parts[1]));
-
-input.value=
-`${parts[1]}! = ${format(result)}`;
-
-}
-
-}else{
-
-/* try to evaluate */
-
-result=
-evaluate(cmd);
-
-input.value=
-`${cmd} = ${format(result)}`;
-
-}
-
-if(typeof result==='number' && isFinite(result)){
-
-answer=result;
-
-history.unshift({
-
-expression:cmd,
-answer:result,
-time:new Date().toLocaleString()
-
-});
-
-save();
-
-renderHistory();
-
-}
-
-document.getElementById("jarvisStatus").textContent=
-"✓ COMMAND EXECUTED";
-
-update();
-
-}catch(e){
-
-document.getElementById("jarvisStatus").textContent=
-"✗ ERROR: "+e.message;
-
-}
-
-}
-
-
-/* =========================================================
-   STATISTICS
-========================================================= */
-
-function statistics(){
-
-const input=
-document.getElementById("statsInput");
-
-const data=
-input.value.split(/[,;\s]+/)
-.map(Number)
-.filter(n=>!isNaN(n));
-
-if(!data.length){
-
-document.getElementById("statsOutput").textContent=
-"Enter numbers separated by commas";
-
-return;
-
-}
-
-const sum=
-data.reduce((a,b)=>a+b,0);
-
-const mean=
-sum/data.length;
-
-const sorted=
-[...data].sort((a,b)=>a-b);
-
-const median=
-sorted.length%2===0
-?(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2
-:sorted[Math.floor(sorted.length/2)];
-
-const variance=
-data.reduce((a,b)=>a+(b-mean)**2,0)/data.length;
-
-const std=
-Math.sqrt(variance);
-
-const min=
-Math.min(...data);
-
-const max=
-Math.max(...data);
-
-document.getElementById("statsOutput").innerHTML=
-`
-Count: ${data.length}<br>
-Sum: ${format(sum)}<br>
-Mean: ${format(mean)}<br>
-Median: ${format(median)}<br>
-Std Dev: ${format(std)}<br>
-Min: ${format(min)}<br>
-Max: ${format(max)}
-`;
-
-}
-
-
-/* =========================================================
-   PERCENTAGE
-========================================================= */
-
-function percentage(){
-
-const a=
-parseFloat(document.getElementById("percentA").value);
-
-const b=
-parseFloat(document.getElementById("percentB").value);
-
-if(isNaN(a)||isNaN(b)){
-
-document.getElementById("percentOutput").textContent=
-"Enter valid numbers";
-
-return;
-
-}
-
-const result=
-(b/100)*a;
-
-document.getElementById("percentOutput").textContent=
-`${b}% of ${a} = ${format(result)}`;
-
-}
-
-
-/* =========================================================
-   UNIT CONVERTER
-========================================================= */
-
-function convertUnit(){
-
-const value=
-parseFloat(document.getElementById("unitValue").value);
-
-const from=
-document.getElementById("unitFrom").value;
-
-const to=
-document.getElementById("unitTo").value;
-
-if(isNaN(value)){
-
-document.getElementById("unitOutput").textContent=
-"Enter a valid number";
-
-return;
-
-}
-
-/* conversion to meters or kilograms base */
-
-const units={
-
-km:1000,
-m:1,
-cm:0.01,
-mile:1609.344,
-
-kg:1,
-g:0.001,
-lb:0.453592
-
+// ============================================================
+// CORE STATE
+// ============================================================
+let expression = "";
+let answer = 0;
+let angleMode = "DEG";
+let complexMode = false;
+let history = [];
+let dark = true;
+let scripts = JSON.parse(localStorage.getItem("jarvis_scripts") || "[]");
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+const CONSTANTS = {
+  c: 299792458,
+  h: 6.62607015e-34,
+  G: 6.67430e-11,
+  e_charge: 1.602176634e-19,
+  m_e: 9.1093837015e-31,
+  m_p: 1.67262192369e-27,
+  R: 8.314462618,
+  N_A: 6.02214076e23,
+  k: 1.380649e-23,
+  sigma: 5.670374419e-8
 };
 
-if(from===to){
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
+const expressionEl = document.getElementById("expression");
+const answerEl = document.getElementById("answer");
+const ansValueEl = document.getElementById("ansValue");
+const angleModeEl = document.getElementById("angleMode");
+const modeDisplay = document.getElementById("modeDisplay");
+const systemStatus = document.getElementById("systemStatus");
 
-document.getElementById("unitOutput").textContent=
-`${format(value)} ${from} = ${format(value)} ${to}`;
-
-return;
-
+// ============================================================
+// STORAGE
+// ============================================================
+function load() {
+  try {
+    history = JSON.parse(localStorage.getItem("jarvis_history") || "[]");
+    answer = Number(localStorage.getItem("jarvis_answer") || 0);
+  } catch {
+    history = [];
+    answer = 0;
+  }
+  renderHistory();
 }
 
-/* convert to base */
-
-const inBase=
-value*units[from];
-
-/* convert from base */
-
-const result=
-inBase/units[to];
-
-document.getElementById("unitOutput").textContent=
-`${format(value)} ${from} = ${format(result)} ${to}`;
-
+function save() {
+  localStorage.setItem("jarvis_history", JSON.stringify(history));
+  localStorage.setItem("jarvis_answer", answer);
+  localStorage.setItem("jarvis_scripts", JSON.stringify(scripts));
 }
 
-
-/* =========================================================
-   QUADRATIC
-========================================================= */
-
-function quadratic(){
-
-const a=
-parseFloat(document.getElementById("qa").value);
-
-const b=
-parseFloat(document.getElementById("qb").value);
-
-const c=
-parseFloat(document.getElementById("qc").value);
-
-if(isNaN(a)||isNaN(b)||isNaN(c)){
-
-document.getElementById("quadOutput").textContent=
-"Enter valid numbers";
-
-return;
-
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showView(id, button) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if (button) button.classList.add("active");
+  if (id === "graph") setTimeout(plotGraph, 100);
+  if (id === "graph3d") setTimeout(plot3D, 100);
 }
 
-if(a===0){
-
-document.getElementById("quadOutput").textContent=
-"a cannot be 0";
-
-return;
-
+// ============================================================
+// INSERT & UPDATE
+// ============================================================
+function insert(value) {
+  expression += value;
+  update();
 }
 
-const d=
-b*b - 4*a*c;
-
-if(d<0){
-
-document.getElementById("quadOutput").textContent=
-"No real roots (discriminant < 0)";
-
-return;
-
+function update() {
+  expressionEl.textContent = expression || "0";
+  if (expression) {
+    try {
+      const value = evaluate(expression);
+      answerEl.textContent = format(value);
+    } catch {
+      answerEl.textContent = "…";
+    }
+  } else {
+    answerEl.textContent = format(answer);
+  }
+  ansValueEl.textContent = format(answer);
 }
 
-if(d===0){
-
-const root=
--b/(2*a);
-
-document.getElementById("quadOutput").textContent=
-`One root: ${format(root)}`;
-
-return;
-
+function clearCalc() {
+  expression = "";
+  update();
 }
 
-const sqrtD=
-Math.sqrt(d);
-
-const root1=
-(-b + sqrtD)/(2*a);
-
-const root2=
-(-b - sqrtD)/(2*a);
-
-document.getElementById("quadOutput").textContent=
-`Root 1: ${format(root1)} | Root 2: ${format(root2)}`;
-
+function backspace() {
+  expression = expression.slice(0, -1);
+  update();
 }
 
-
-/* =========================================================
-   MATRIX DETERMINANT
-========================================================= */
-
-function matrixDeterminant(){
-
-const m11=
-parseFloat(document.getElementById("m11").value);
-
-const m12=
-parseFloat(document.getElementById("m12").value);
-
-const m21=
-parseFloat(document.getElementById("m21").value);
-
-const m22=
-parseFloat(document.getElementById("m22").value);
-
-if([m11,m12,m21,m22].some(isNaN)){
-
-document.getElementById("matrixOutput").textContent=
-"Enter valid numbers";
-
-return;
-
+// ============================================================
+// ANGLE & COMPLEX MODE
+// ============================================================
+function toggleAngle() {
+  angleMode = angleMode === "DEG" ? "RAD" : "DEG";
+  document.getElementById("angle").textContent = angleMode;
+  angleModeEl.textContent = angleMode;
+  update();
 }
 
-const det=
-m11*m22 - m12*m21;
-
-document.getElementById("matrixOutput").textContent=
-`Determinant = ${format(det)}`;
-
+function toggleComplex() {
+  complexMode = !complexMode;
+  document.getElementById("complexBtn").textContent = complexMode ? "CMPLX" : "REAL";
+  modeDisplay.textContent = complexMode ? "COMPLEX" : "REAL";
+  systemStatus.textContent = complexMode ? "JARVIS // COMPLEX MODE" : "JARVIS // READY";
+  update();
 }
 
-
-/* =========================================================
-   MATRIX INVERSE
-========================================================= */
-
-function matrixInverse(){
-
-const m11=
-parseFloat(document.getElementById("m11").value);
-
-const m12=
-parseFloat(document.getElementById("m12").value);
-
-const m21=
-parseFloat(document.getElementById("m21").value);
-
-const m22=
-parseFloat(document.getElementById("m22").value);
-
-if([m11,m12,m21,m22].some(isNaN)){
-
-document.getElementById("matrixOutput").textContent=
-"Enter valid numbers";
-
-return;
-
+function toggleTheme() {
+  dark = !dark;
+  if (dark) {
+    document.documentElement.style.setProperty("--bg", "#03070b");
+    document.documentElement.style.setProperty("--panel", "#07111a");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#f0f4f8");
+    document.documentElement.style.setProperty("--panel", "#ffffff");
+  }
 }
 
-const det=
-m11*m22 - m12*m21;
-
-if(det===0){
-
-document.getElementById("matrixOutput").textContent=
-"Matrix is singular (det=0), no inverse";
-
-return;
-
+// ============================================================
+// MATH FUNCTIONS
+// ============================================================
+function factorial(n) {
+  if (n < 0 || n > 170 || !Number.isInteger(n)) throw Error("Invalid factorial");
+  let r = 1;
+  for (let i = 2; i <= n; i++) r *= i;
+  return r;
 }
 
-const inv11=m22/det;
-const inv12=-m12/det;
-const inv21=-m21/det;
-const inv22=m11/det;
+function rad(x) { return angleMode === "DEG" ? x * Math.PI / 180 : x; }
+function deg(x) { return angleMode === "DEG" ? x * 180 / Math.PI : x; }
 
-document.getElementById("matrixOutput").innerHTML=
-`
-[ ${format(inv11)}  ${format(inv12)} ]<br>
-[ ${format(inv21)}  ${format(inv22)} ]
-`;
-
+function isPrime(n) {
+  if (n < 2) return false;
+  if (n === 2) return true;
+  if (n % 2 === 0) return false;
+  for (let i = 3; i * i <= n; i += 2) if (n % i === 0) return false;
+  return true;
 }
 
-
-/* =========================================================
-   GRAPH PLOTTER
-========================================================= */
-
-function plotGraph(){
-
-const canvas=
-document.getElementById("graphCanvas");
-
-const ctx=
-canvas.getContext("2d");
-
-const fx=
-document.getElementById("fx").value;
-
-const range=
-parseFloat(document.getElementById("range").value)||10;
-
-canvas.width=canvas.clientWidth||500;
-canvas.height=canvas.clientHeight||350;
-
-const w=canvas.width;
-const h=canvas.height;
-
-ctx.clearRect(0,0,w,h);
-
-/* grid */
-
-ctx.strokeStyle="rgba(0,234,255,.08)";
-ctx.lineWidth=1;
-
-for(let i=0;i<=10;i++){
-
-const x=i*w/10;
-const y=i*h/10;
-
-ctx.beginPath();
-ctx.moveTo(x,0);
-ctx.lineTo(x,h);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(0,y);
-ctx.lineTo(w,y);
-ctx.stroke();
-
+function primeFactors(n) {
+  const factors = [];
+  let d = 2;
+  while (n > 1) {
+    while (n % d === 0) { factors.push(d); n /= d; }
+    d++;
+    if (d * d > n && n > 1) { factors.push(n); break; }
+  }
+  return factors;
 }
 
-/* axes */
-
-ctx.strokeStyle="rgba(0,234,255,.3)";
-ctx.lineWidth=2;
-
-ctx.beginPath();
-ctx.moveTo(w/2,0);
-ctx.lineTo(w/2,h);
-ctx.stroke();
-
-ctx.beginPath();
-ctx.moveTo(0,h/2);
-ctx.lineTo(w,h/2);
-ctx.stroke();
-
-/* plot function */
-
-try{
-
-const fn=
-new Function(
-"x",
-`
-"use strict";
-return (${fx});
-`
-);
-
-ctx.strokeStyle="#00eaff";
-ctx.lineWidth=2.5;
-ctx.shadowColor="#00eaff";
-ctx.shadowBlur=10;
-
-ctx.beginPath();
-
-let started=false;
-
-for(let i=0;i<=w;i++){
-
-const x=
-range*((i/w)*2-1);
-
-try{
-
-const y=
-fn(x);
-
-if(!isFinite(y)){
-
-started=false;
-continue;
-
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
 }
 
-const px=i;
-const py=h/2 - (y/range)*(h/2);
+function lcm(a, b) { return Math.abs(a * b) / gcd(a, b); }
 
-if(!started){
-
-ctx.moveTo(px,py);
-started=true;
-
-}else{
-
-ctx.lineTo(px,py);
-
+// ============================================================
+// STATISTICAL DISTRIBUTIONS
+// ============================================================
+function normalPDF(x, mu, sigma) {
+  return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * ((x - mu) / sigma) ** 2);
 }
 
-}catch{
-
-started=false;
-
+function normalCDF(x, mu, sigma) {
+  return 0.5 * (1 + erf((x - mu) / (sigma * Math.sqrt(2))));
 }
 
+function erf(z) {
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+  const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  const sign = z < 0 ? -1 : 1;
+  z = Math.abs(z);
+  const t = 1 / (1 + p * z);
+  const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-z * z);
+  return sign * y;
 }
 
-ctx.stroke();
-
-ctx.shadowBlur=0;
-
-}catch(e){
-
-ctx.fillStyle="var(--red)";
-ctx.font="14px system-ui";
-ctx.fillText("Error: "+e.message,20,40);
-
+function binomialPMF(k, n, p) {
+  if (k < 0 || k > n) return 0;
+  return factorial(n) / (factorial(k) * factorial(n - k)) * Math.pow(p, k) * Math.pow(1 - p, n - k);
 }
 
+function poissonPMF(k, lambda) {
+  return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
 }
 
+function exponentialPDF(x, lambda) {
+  return lambda * Math.exp(-lambda * x);
+}
 
-/* =========================================================
-   INIT
-========================================================= */
+// ============================================================
+// NUMERICAL METHODS
+// ============================================================
+function numericalIntegrate(f, a, b, n = 1000) {
+  const h = (b - a) / n;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const x1 = a + i * h;
+    const x2 = a + (i + 1) * h;
+    sum += (f(x1) + f(x2)) / 2 * h;
+  }
+  return sum;
+}
 
+function numericalDerivative(f, x, h = 1e-6) {
+  return (f(x + h) - f(x - h)) / (2 * h);
+}
+
+function newtonMethod(f, x0, tol = 1e-6, maxIter = 100) {
+  let x = x0;
+  for (let i = 0; i < maxIter; i++) {
+    const fx = f(x);
+    const dfx = (f(x + 1e-6) - f(x - 1e-6)) / 2e-6;
+    if (Math.abs(dfx) < 1e-12) return null;
+    const x1 = x - fx / dfx;
+    if (Math.abs(x1 - x) < tol) return x1;
+    x = x1;
+  }
+  return null;
+}
+
+// ============================================================
+// EVALUATION ENGINE (CAS-like)
+// ============================================================
+function evaluate(input) {
+  let x = input;
+  
+  // Symbol replacements
+  x = x.replace(/×/g, "*").replace(/÷/g, "/").replace(/−/g, "-");
+  x = x.replace(/π/g, "Math.PI").replace(/\bAns\b/g, "answer");
+  
+  // Constants
+  for (const [key, value] of Object.entries(CONSTANTS)) {
+    x = x.replace(new RegExp(`\\b${key}\\b`, 'g'), value);
+  }
+  
+  // Factorial
+  while (/(\d+(?:\.\d+)?|\([^()]+\))!/.test(x)) {
+    x = x.replace(/(\d+(?:\.\d+)?|\([^()]+\))!/g, "factorial($1)");
+  }
+  
+  // Power
+  x = x.replace(/(\([^()]+\)|\d+(?:\.\d+)?)\^(\([^()]+\)|\d+(?:\.\d+)?)/g, "Math.pow($1,$2)");
+  
+  // Functions
+  x = x.replace(/sqrt\(/g, "Math.sqrt(").replace(/cbrt\(/g, "Math.cbrt(");
+  x = x.replace(/abs\(/g, "Math.abs(").replace(/log\(/g, "Math.log10(").replace(/ln\(/g, "Math.log(");
+  x = x.replace(/sin\(/g, "SIN(").replace(/cos\(/g, "COS(").replace(/tan\(/g, "TAN(");
+  x = x.replace(/asin\(/g, "ASIN(").replace(/acos\(/g, "ACOS(").replace(/atan\(/g, "ATAN(");
+  x = x.replace(/conj\(/g, "CONJ(").replace(/arg\(/g, "ARG(");
+  
+  // Complex
+  if (complexMode) x = x.replace(/\bi\b/g, "1i");
+  
+  // Security
+  if (/[^0-9+\-*/()., _a-zA-Z]/.test(x)) throw Error("Invalid expression");
+  
+  const fn = new Function(
+    "factorial", "answer", "SIN", "COS", "TAN", "ASIN", "ACOS", "ATAN", "CONJ", "ARG",
+    `"use strict"; return (${x});`
+  );
+  
+  const result = fn(
+    factorial, answer,
+    v => Math.sin(rad(v)), v => Math.cos(rad(v)), v => Math.tan(rad(v)),
+    v => deg(Math.asin(v)), v => deg(Math.acos(v)), v => deg(Math.atan(v)),
+    v => v, v => v
+  );
+  
+  if (typeof result === 'number' && !isFinite(result)) throw Error("Infinite result");
+  return result;
+}
+
+// ============================================================
+// CALCULATE
+// ============================================================
+function calculate() {
+  if (!expression) return;
+  try {
+    const oldExpression = expression;
+    const value = evaluate(expression);
+    answer = value;
+    history.unshift({ expression: oldExpression, answer: value, time: new Date().toLocaleString() });
+    save();
+    renderHistory();
+    update();
+    answerEl.classList.add("flash");
+    setTimeout(() => answerEl.classList.remove("flash"), 350);
+    expression = "";
+    update();
+  } catch {
+    answerEl.textContent = "ERROR";
+    setTimeout(() => update(), 500);
+  }
+}
+
+// ============================================================
+// FORMAT
+// ============================================================
+function format(n) {
+  if (typeof n !== 'number') return n;
+  if (Number.isInteger(n)) return n.toString();
+  return n.toFixed(8).replace(/\.?0+$/, '');
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+function renderHistory() {
+  const list = document.getElementById("historyList");
+  if (!list) return;
+  list.innerHTML = history.map(item => `
+    <div class="historyItem">
+      <div class="exp">${item.expression}</div>
+      <div class="ans">= ${format(item.answer)}</div>
+      <div style="color:var(--muted);font-size:9px;">${item.time || ''}</div>
+    </div>
+  `).join("");
+}
+
+function clearHistory() {
+  history = [];
+  save();
+  renderHistory();
+}
+
+function exportHistory() {
+  const data = JSON.stringify(history, null, 2);
+  downloadFile(data, 'jarvis_history.json', 'application/json');
+}
+
+function exportData() {
+  const data = {
+    history: history,
+    answer: answer,
+    scripts: scripts,
+    version: "5.0"
+  };
+  downloadFile(JSON.stringify(data, null, 2), 'jarvis_data.json', 'application/json');
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], { type: type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// EQUATION SOLVER
+// ============================================================
+function solveEquation() {
+  const input = document.getElementById("eqInput").value;
+  const output = document.getElementById("eqOutput");
+  try {
+    let eq = input.replace(/\s/g, '');
+    let left, right;
+    if (eq.includes('=')) {
+      const parts = eq.split('=');
+      left = parts[0];
+      right = parts[1] || '0';
+    } else {
+      left = eq;
+      right = '0';
+    }
+    
+    const f = (x) => {
+      try {
+        const expr = left.replace(/x/g, `(${x})`) + '-(' + right.replace(/x/g, `(${x})`) + ')';
+        return new Function(`return (${expr})`)();
+      } catch { return NaN; }
+    };
+    
+    const roots = [];
+    for (let guess = -10; guess <= 10; guess += 0.5) {
+      try {
+        const root = newtonMethod(f, guess);
+        if (root !== null && !roots.some(r => Math.abs(r - root) < 0.001)) {
+          roots.push(root);
+        }
+      } catch {}
+    }
+    
+    if (roots.length === 0) {
+      output.textContent = "No real roots found.";
+    } else {
+      output.textContent = "Roots: " + roots.map(r => format(r)).join(', ');
+    }
+  } catch (e) {
+    output.textContent = "Error: " + e.message;
+  }
+}
+
+// ============================================================
+// CALCULUS
+// ============================================================
+function doCalculus() {
+  const func = document.getElementById("calcFunc").value;
+  const from = parseFloat(document.getElementById("calcFrom").value);
+  const to = parseFloat(document.getElementById("calcTo").value);
+  const output = document.getElementById("calcOutput");
+  
+  if (isNaN(from) || isNaN(to)) {
+    output.textContent = "Enter valid range.";
+    return;
+  }
+  
+  try {
+    const f = new Function("x", `"use strict"; return (${func});`);
+    const result = numericalIntegrate(f, from, to);
+    const derivative = numericalDerivative(f, (from + to) / 2);
+    const derivAtStart = numericalDerivative(f, from);
+    const derivAtEnd = numericalDerivative(f, to);
+    output.innerHTML = `
+      ∫(${func}) dx from ${format(from)} to ${format(to)} = ${format(result)}<br>
+      d/dx at midpoint = ${format(derivative)}<br>
+      d/dx at ${format(from)} = ${format(derivAtStart)}, at ${format(to)} = ${format(derivAtEnd)}
+    `;
+  } catch (e) {
+    output.textContent = "Error: " + e.message;
+  }
+}
+
+// ============================================================
+// STATISTICS
+// ============================================================
+function statistics() {
+  const input = document.getElementById("statsInput");
+  const data = input.value.split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
+  if (!data.length) {
+    document.getElementById("statsOutput").textContent = "Enter numbers separated by commas";
+    return;
+  }
+  const sum = data.reduce((a, b) => a + b, 0);
+  const mean = sum / data.length;
+  const sorted = [...data].sort((a, b) => a - b);
+  const median = sorted.length % 2 === 0 ? (sorted[sorted.length/2-1] + sorted[sorted.length/2]) / 2 : sorted[Math.floor(sorted.length/2)];
+  const variance = data.reduce((a, b) => a + (b - mean) ** 2, 0) / data.length;
+  const std = Math.sqrt(variance);
+  const skewness = data.reduce((a, b) => a + ((b - mean) / std) ** 3, 0) / data.length;
+  const kurtosis = data.reduce((a, b) => a + ((b - mean) / std) ** 4, 0) / data.length - 3;
+  
+  document.getElementById("statsOutput").innerHTML = `
+    Count: ${data.length}<br>
+    Sum: ${format(sum)}<br>
+    Mean: ${format(mean)}<br>
+    Median: ${format(median)}<br>
+    Std Dev: ${format(std)}<br>
+    Variance: ${format(variance)}<br>
+    Skewness: ${format(skewness)}<br>
+    Kurtosis: ${format(kurtosis)}<br>
+    Min: ${format(Math.min(...data))}<br>
+    Max: ${format(Math.max(...data))}
+  `;
+}
+
+// ============================================================
+// PERCENTAGE
+// ============================================================
+function percentage() {
+  const a = parseFloat(document.getElementById("percentA").value);
+  const b = parseFloat(document.getElementById("percentB").value);
+  if (isNaN(a) || isNaN(b)) {
+    document.getElementById("percentOutput").textContent = "Enter valid numbers";
+    return;
+  }
+  document.getElementById("percentOutput").textContent = `${b}% of ${a} = ${format((b/100)*a)}`;
+}
+
+// ============================================================
+// UNIT CONVERTER
+// ============================================================
+function convertUnit() {
+  const value = parseFloat(document.getElementById("unitValue").value);
+  const from = document.getElementById("unitFrom").value;
+  const to = document.getElementById("unitTo").value;
+  if (isNaN(value)) {
+    document.getElementById("unitOutput").textContent = "Enter a valid number";
+    return;
+  }
+  const units = { km: 1000, m: 1, cm: 0.01, mile: 1609.344, kg: 1, g: 0.001, lb: 0.453592 };
+  if (from === to) {
+    document.getElementById("unitOutput").textContent = `${format(value)} ${from} = ${format(value)} ${to}`;
+    return;
+  }
+  const result = (value * units[from]) / units[to];
+  document.getElementById("unitOutput").textContent = `${format(value)} ${from} = ${format(result)} ${to}`;
+}
+
+// ============================================================
+// PRIME CHECK
+// ============================================================
+function primeCheck() {
+  const n = parseInt(document.getElementById("primeInput").value);
+  const output = document.getElementById("primeOutput");
+  if (isNaN(n) || n < 1) {
+    output.textContent = "Enter a positive integer";
+    return;
+  }
+  if (isPrime(n)) {
+    output.textContent = `${n} is a prime number.`;
+  } else {
+    const factors = primeFactors(n);
+    output.textContent = `${n} = ${factors.join(' × ')}`;
+  }
+}
+
+// ============================================================
+// DISTRIBUTIONS
+// ============================================================
+function distribution() {
+  const type = document.getElementById("distType").value;
+  const p1 = parseFloat(document.getElementById("distParam1").value);
+  const p2 = parseFloat(document.getElementById("distParam2").value);
+  const x = parseFloat(document.getElementById("distX").value);
+  const output = document.getElementById("distOutput");
+  
+  if (isNaN(x)) { output.textContent = "Enter x value"; return; }
+  
+  try {
+    let result = "";
+    switch(type) {
+      case 'normal':
+        const pdf = normalPDF(x, p1, p2);
+        const cdf = normalCDF(x, p1, p2);
+        result = `PDF: ${format(pdf)}\nCDF: ${format(cdf)}\nZ-score: ${format((x-p1)/p2)}`;
+        break;
+      case 'binomial':
+        if (!Number.isInteger(x)) { output.textContent = "x must be integer"; return; }
+        result = `PMF: ${format(binomialPMF(x, p1, p2))}\nMean: ${format(p1*p2)}\nVariance: ${format(p1*p2*(1-p2))}`;
+        break;
+      case 'poisson':
+        if (!Number.isInteger(x)) { output.textContent = "x must be integer"; return; }
+        result = `PMF: ${format(poissonPMF(x, p1))}\nMean: ${format(p1)}\nVariance: ${format(p1)}`;
+        break;
+      case 'exponential':
+        result = `PDF: ${format(exponentialPDF(x, p1))}\nCDF: ${format(1 - Math.exp(-p1*x))}\nMean: ${format(1/p1)}`;
+        break;
+    }
+    output.textContent = result;
+  } catch(e) {
+    output.textContent = "Error: " + e.message;
+  }
+}
+
+// ============================================================
+// REGRESSION
+// ============================================================
+function regression() {
+  const input = document.getElementById("regData").value;
+  const output = document.getElementById("regOutput");
+  try {
+    const parts = input.split('|');
+    const xData = parts[0].split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
+    const yData = parts[1].split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
+    
+    if (xData.length !== yData.length || xData.length < 2) {
+      output.textContent = "Enter paired data: x: 1,2,3 | y: 2,4,6";
+      return;
+    }
+    
+    const n = xData.length;
+    const sumX = xData.reduce((a,b) => a + b, 0);
+    const sumY = yData.reduce((a,b) => a + b, 0);
+    const sumXY = xData.reduce((a,b,i) => a + b * yData[i], 0);
+    const sumX2 = xData.reduce((a,b) => a + b * b, 0);
+    const sumY2 = yData.reduce((a,b) => a + b * b, 0);
+    
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+    const r = (n * sumXY - sumX * sumY) / Math.sqrt((n * sumX2 - sumX*sumX) * (n * sumY2 - sumY*sumY));
+    
+    const predicted = yData.map((y,i) => slope * xData[i] + intercept);
+    const residuals = yData.map((y,i) => y - predicted[i]);
+    const mse = residuals.reduce((a,b) => a + b*b, 0) / n;
+    
+    output.innerHTML = `
+      y = ${format(slope)}x + ${format(intercept)}<br>
+      R² = ${format(r*r)}<br>
+      Correlation r = ${format(r)}<br>
+      MSE = ${format(mse)}<br>
+      Residuals: ${residuals.map(r => format(r)).join(', ')}
+    `;
+  } catch(e) {
+    output.textContent = "Error: " + e.message;
+  }
+}
+
+// ============================================================
+// MATRIX OPERATIONS
+// ============================================================
+function getMatrix() {
+  return [
+    [parseFloat(document.getElementById("m11").value) || 0,
+     parseFloat(document.getElementById("m12").value) || 0],
+    [parseFloat(document.getElementById("m21").value) || 0,
+     parseFloat(document.getElementById("m22").value) || 0]
+  ];
+}
+
+function matrixDet() {
+  const m = getMatrix();
+  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+  document.getElementById("matrixOutput").textContent = `Det = ${format(det)}`;
+}
+
+function matrixInv() {
+  const m = getMatrix();
+  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+  if (det === 0) {
+    document.getElementById("matrixOutput").textContent = "Singular (no inverse)";
+    return;
+  }
+  const inv = [[m[1][1]/det, -m[0][1]/det], [-m[1][0]/det, m[0][0]/det]];
+  document.getElementById("matrixOutput").innerHTML = `
+    [ ${format(inv[0][0])}  ${format(inv[0][1])} ]<br>
+    [ ${format(inv[1][0])}  ${format(inv[1][1])} ]
+  `;
+}
+
+function matrixEigen() {
+  const m = getMatrix();
+  const trace = m[0][0] + m[1][1];
+  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+  const disc = trace * trace - 4 * det;
+  if (disc < 0) {
+    document.getElementById("matrixOutput").textContent = "Complex eigenvalues";
+    return;
+  }
+  const e1 = (trace + Math.sqrt(disc)) / 2;
+  const e2 = (trace - Math.sqrt(disc)) / 2;
+  document.getElementById("matrixOutput").textContent = `λ₁ = ${format(e1)}, λ₂ = ${format(e2)}`;
+}
+
+function matrixTranspose() {
+  const m = getMatrix();
+  document.getElementById("matrixOutput").innerHTML = `
+    [ ${format(m[0][0])}  ${format(m[1][0])} ]<br>
+    [ ${format(m[0][1])}  ${format(m[1][1])} ]
+  `;
+}
+
+// ============================================================
+// GRAPH PLOTTER
+// ============================================================
+function plotGraph() {
+  const canvas = document.getElementById("graphCanvas");
+  const ctx = canvas.getContext("2d");
+  const fx = document.getElementById("fx").value;
+  const fx2 = document.getElementById("fx2").value;
+  const minX = parseFloat(document.getElementById("rangeMin").value) || -10;
+  const maxX = parseFloat(document.getElementById("rangeMax").value) || 10;
+  
+  canvas.width = canvas.clientWidth || 500;
+  canvas.height = canvas.clientHeight || 350;
+  const w = canvas.width, h = canvas.height;
+  
+  ctx.clearRect(0, 0, w, h);
+  
+  // Grid
+  ctx.strokeStyle = "rgba(0,234,255,0.08)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 20; i++) {
+    const x = i * w / 20, y = i * h / 20;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  
+  // Axes
+  ctx.strokeStyle = "rgba(0,234,255,0.3)";
+  ctx.lineWidth = 2;
+  const x0 = -minX / (maxX - minX) * w;
+  const y0 = h / 2;
+  ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, h); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(w, y0); ctx.stroke();
+  
+  const plotFunction = (func, color, label) => {
+    try {
+      const f = new Function("x", `"use strict"; return (${func});`);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i <= w; i++) {
+        const x = minX + (i / w) * (maxX - minX);
+        try {
+          const y = f(x);
+          if (!isFinite(y)) { started = false; continue; }
+          const px = i, py = y0 - (y / (maxX - minX)) * (h / 2);
+          if (!started) { ctx.moveTo(px, py); started = true; }
+          else ctx.lineTo(px, py);
+        } catch { started = false; }
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    } catch(e) {}
+  };
+  
+  plotFunction(fx, "#00eaff", "f(x)");
+  if (fx2) plotFunction(fx2, "#ffd166", "g(x)");
+}
+
+function findRoots() {
+  const fx = document.getElementById("fx").value;
+  const output = document.getElementById("graphOutput");
+  const minX = parseFloat(document.getElementById("rangeMin").value) || -10;
+  const maxX = parseFloat(document.getElementById("rangeMax").value) || 10;
+  
+  try {
+    const f = new Function("x", `"use strict"; return (${fx});`);
+    const roots = [];
+    for (let x = minX; x <= maxX; x += 0.01) {
+      try {
+        const y = f(x);
+        if (Math.abs(y) < 0.001) {
+          const root = newtonMethod(f, x);
+          if (root !== null && root >= minX && root <= maxX && !roots.some(r => Math.abs(r - root) < 0.01)) {
+            roots.push(root);
+          }
+        }
+      } catch {}
+    }
+    if (roots.length === 0) output.textContent = "No roots found.";
+    else output.textContent = "Roots: " + roots.map(r => format(r)).join(', ');
+  } catch(e) {
+    output.textContent = "Error: " + e.message;
+  }
+}
+
+function exportGraph() {
+  const canvas = document.getElementById("graphCanvas");
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'graph.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+// ============================================================
+// 3D GRAPH PLOTTER
+// ============================================================
+function plot3D() {
+  const canvas = document.getElementById("canvas3d");
+  const ctx = canvas.getContext("2d");
+  const func = document.getElementById("f3d").value || "sin(x)*cos(y)";
+  const range = parseFloat(document.getElementById("range3d").value) || 5;
+  const res = parseInt(document.getElementById("res3d").value) || 30;
+  
+  canvas.width = canvas.clientWidth || 500;
+  canvas.height = canvas.clientHeight || 400;
+  const w = canvas.width, h = canvas.height;
+  
+  ctx.clearRect(0, 0, w, h);
+  
+  try {
+    const f = new Function("x", "y", `"use strict"; return (${func});`);
+    
+    // Simple 3D to 2D projection (isometric)
+    const project = (x, y, z) => {
+      const scale = Math.min(w, h) / (range * 2.5);
+      const px = w/2 + (x - y) * scale * 0.8;
+      const py = h/2 - (x + y) * scale * 0.4 - z * scale * 0.6;
+      return [px, py];
+    };
+    
+    // Draw grid
+    const step = range * 2 / res;
+    const points = [];
+    
+    for (let i = 0; i <= res; i++) {
+      const row = [];
+      for (let j = 0; j <= res; j++) {
+        const x = -range + i * step;
+        const y = -range + j * step;
+        let z;
+        try { z = f(x, y); } catch { z = 0; }
+        if (!isFinite(z)) z = 0;
+        const [px, py] = project(x, y, z);
+        row.push({ x: px, y: py, z: z });
+      }
+      points.push(row);
+    }
+    
+    // Find z range for coloring
+    let zMin = Infinity, zMax = -Infinity;
+    for (const row of points) {
+      for (const p of row) {
+        if (p.z < zMin) zMin = p.z;
+        if (p.z > zMax) zMax = p.z;
+      }
+    }
+    const zRange = zMax - zMin || 1;
+    
+    // Draw surfaces (triangles)
+    for (let i = 0; i < points.length - 1; i++) {
+      for (let j = 0; j < points[i].length - 1; j++) {
+        const p1 = points[i][j];
+        const p2 = points[i][j+1];
+        const p3 = points[i+1][j];
+        const p4 = points[i+1][j+1];
+        
+        const color1 = 180 + 75 * (p1.z - zMin) / zRange;
+        const color2 = 180 + 75 * (p4.z - zMin) / zRange;
+        
+        // Triangle 1
+        ctx.fillStyle = `hsl(190, 100%, ${Math.min(color1, 255)}%)`;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "rgba(0,234,255,0.1)";
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        
+        // Triangle 2
+        ctx.fillStyle = `hsl(190, 100%, ${Math.min(color2, 255)}%)`;
+        ctx.beginPath();
+        ctx.moveTo(p2.x, p2.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    
+    // Draw axes
+    ctx.strokeStyle = "rgba(0,234,255,0.5)";
+    ctx.lineWidth = 1.5;
+    const origin = project(0, 0, 0);
+    const xEnd = project(range, 0, 0);
+    const yEnd = project(0, range, 0);
+    const zEnd = project(0, 0, range);
+    
+    ctx.beginPath();
+    ctx.moveTo(origin[0], origin[1]);
+    ctx.lineTo(xEnd[0], xEnd[1]);
+    ctx.stroke();
+    ctx.fillStyle = "#00eaff";
+    ctx.fillText("x", xEnd[0]+5, xEnd[1]-5);
+    
+    ctx.beginPath();
+    ctx.moveTo(origin[0], origin[1]);
+    ctx.lineTo(yEnd[0], yEnd[1]);
+    ctx.stroke();
+    ctx.fillText("y", yEnd[0]+5, yEnd[1]+5);
+    
+    ctx.beginPath();
+    ctx.moveTo(origin[0], origin[1]);
+    ctx.lineTo(zEnd[0], zEnd[1]);
+    ctx.stroke();
+    ctx.fillText("z", zEnd[0]-10, zEnd[1]-10);
+    
+  } catch(e) {
+    ctx.fillStyle = "#ff5277";
+    ctx.font = "14px system-ui";
+    ctx.fillText("Error: " + e.message, 20, 40);
+  }
+}
+
+// ============================================================
+// VOICE INPUT
+// ============================================================
+function startVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    document.getElementById("jarvisStatus").textContent = "✗ Voice not supported";
+    return;
+  }
+  
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  
+  document.getElementById("jarvisStatus").textContent = "🎤 Listening...";
+  
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById("command").value = transcript;
+    document.getElementById("jarvisStatus").textContent = "✓ Voice captured";
+    runCommand();
+  };
+  
+  recognition.onerror = () => {
+    document.getElementById("jarvisStatus").textContent = "✗ Voice error";
+  };
+  
+  recognition.start();
+}
+
+// ============================================================
+// SCRIPTING
+// ============================================================
+function runScript() {
+  const code = document.getElementById("scriptArea").value;
+  const output = document.getElementById("scriptOutput");
+  try {
+    // Create a safe execution environment
+    const fn = new Function(
+      "answer", "CONSTANTS", "factorial", "gcd", "lcm", "isPrime", "primeFactors",
+      `"use strict"; ${code}`
+    );
+    const result = fn(answer, CONSTANTS, factorial, gcd, lcm, isPrime, primeFactors);
+    output.textContent = "Result: " + (result !== undefined ? format(result) : "undefined");
+  } catch(e) {
+    output.textContent = "Error: " + e.message;
+  }
+}
+
+function saveScript() {
+  const code = document.getElementById("scriptArea").value;
+  scripts.push({ code: code, time: new Date().toLocaleString() });
+  if (scripts.length > 20) scripts.shift();
+  save();
+  document.getElementById("scriptOutput").textContent = "✓ Script saved";
+}
+
+// ============================================================
+// COMMAND SYSTEM
+// ============================================================
+function runCommand() {
+  const input = document.getElementById("command");
+  const cmd = input.value.trim();
+  if (!cmd) return;
+  
+  try {
+    let result = "";
+    let status = "✓ EXECUTED";
+    
+    // Equation solving
+    if (cmd.toLowerCase().includes('solve')) {
+      const eq = cmd.replace(/solve\s*/i, '');
+      document.getElementById("eqInput").value = eq;
+      solveEquation();
+      result = document.getElementById("eqOutput").textContent;
+      status = "✓ SOLVED";
+    }
+    // Integration
+    else if (cmd.toLowerCase().includes('integrate')) {
+      const parts = cmd.match(/integrate\s*([^\d]+)\s*(\d+\.?\d*)\s*(\d+\.?\d*)/i);
+      if (parts) {
+        document.getElementById("calcFunc").value = parts[1].trim();
+        document.getElementById("calcFrom").value = parts[2];
+        document.getElementById("calcTo").value = parts[3];
+        doCalculus();
+        result = document.getElementById("calcOutput").textContent;
+        status = "✓ INTEGRATED";
+      }
+    }
+    // Prime / factor
+    else if (cmd.toLowerCase().includes('prime') || cmd.toLowerCase().includes('factor')) {
+      const num = cmd.match(/\d+/);
+      if (num) {
+        document.getElementById("primeInput").value = num[0];
+        primeCheck();
+        result = document.getElementById("primeOutput").textContent;
+        status = "✓ FACTORED";
+      }
+    }
+    // Plot
+    else if (cmd.toLowerCase().includes('plot') || cmd.toLowerCase().includes('graph')) {
+      const match = cmd.match(/plot\s*([^,\s]+)/i);
+      if (match) {
+        document.getElementById("fx").value = match[1];
+        plotGraph();
+        result = "Graph plotted: " + match[1];
+        status = "✓ PLOTTED";
+      }
+    }
+    // Statistics
+    else if (cmd.toLowerCase().includes('stats') || cmd.toLowerCase().includes('mean')) {
+      const nums = cmd.match(/\d+\.?\d*/g);
+      if (nums && nums.length > 1) {
+        document.getElementById("statsInput").value = nums.join(', ');
+        statistics();
+        result = document.getElementById("statsOutput").textContent;
+        status = "✓ STATS";
+      }
+    }
+    // Evaluate
+    else {
+      const value = evaluate(cmd);
+      if (typeof value === 'number' && isFinite(value)) {
+        answer = value;
+        history.unshift({ expression: cmd, answer: value, time: new Date().toLocaleString() });
+        save();
+        renderHistory();
+        update();
+        result = format(value);
+        status = "✓ COMPUTED";
+      }
+    }
+    
+    document.getElementById("jarvisStatus").textContent = status;
+    if (result) input.value = result;
+    
+  } catch(e) {
+    document.getElementById("jarvisStatus").textContent = "✗ ERROR: " + e.message;
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
 load();
-
 update();
-
-/* graph resize */
-
-setTimeout(plotGraph,100);
-
-window.addEventListener("resize",()=>{
-
-plotGraph();
-
+setTimeout(() => { plotGraph(); plot3D(); }, 300);
+window.addEventListener("resize", () => {
+  if (document.getElementById("graph").classList.contains("active")) plotGraph();
+  if (document.getElementById("graph3d").classList.contains("active")) plot3D();
 });
 
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+    if (e.target.id === 'command') runCommand();
+    else if (e.target.closest('.card')) {
+      const btn = e.target.closest('.card').querySelector('button');
+      if (btn) btn.click();
+    }
+  }
+});
 </script>
-
 </body>
-        </html>
+  </html>
