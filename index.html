@@ -1215,4 +1215,725 @@ history.unshift({
 
 expression:oldExpression,
 answer:value,
-time:
+time:new Date().toLocaleString()
+
+});
+
+save();
+renderHistory();
+update();
+answerEl.classList.add("flash");
+setTimeout(()=>answerEl.classList.remove("flash"),350);
+expression="";
+update();
+
+}catch{
+answerEl.textContent="ERROR";
+setTimeout(()=>update(),500);
+}
+
+}
+
+
+/* =========================================================
+   FORMAT
+========================================================= */
+
+function format(n){
+
+if(typeof n!=='number')return n;
+
+if(Number.isInteger(n))return n.toString();
+
+return n.toFixed(8).replace(/\.?0+$/,'');
+
+}
+
+
+/* =========================================================
+   HISTORY RENDER
+========================================================= */
+
+function renderHistory(){
+
+const list=
+document.getElementById("historyList");
+
+if(!list)return;
+
+list.innerHTML=
+history.map(item=>
+`
+<div class="historyItem">
+<div class="exp">${item.expression}</div>
+<div class="ans">= ${format(item.answer)}</div>
+<div style="color:var(--muted);font-size:10px">${item.time||''}</div>
+</div>
+`
+).join("");
+
+}
+
+
+/* =========================================================
+   CLEAR HISTORY
+========================================================= */
+
+function clearHistory(){
+
+history=[];
+
+save();
+
+renderHistory();
+
+}
+
+
+/* =========================================================
+   VOICE
+========================================================= */
+
+function toggleVoice(){
+
+voiceEnabled=!voiceEnabled;
+
+document.querySelector(
+'[onclick="toggleVoice()"]'
+).textContent=
+voiceEnabled?"🎙 ON":"🎙";
+
+if(voiceEnabled){
+document.getElementById("jarvisStatus").textContent=
+"🎤 VOICE INPUT ACTIVE";
+}else{
+document.getElementById("jarvisStatus").textContent=
+"SYSTEM ONLINE";
+}
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function toggleTheme(){
+
+dark=!dark;
+
+if(dark){
+
+document.documentElement.style.setProperty(
+"--bg","#03070b"
+);
+
+document.documentElement.style.setProperty(
+"--panel","#07111a"
+);
+
+}else{
+
+document.documentElement.style.setProperty(
+"--bg","#f0f4f8"
+);
+
+document.documentElement.style.setProperty(
+"--panel","#ffffff"
+);
+
+}
+
+}
+
+
+/* =========================================================
+   COMMAND
+========================================================= */
+
+function runCommand(){
+
+const input=
+document.getElementById("command");
+
+const cmd=
+input.value.trim();
+
+if(!cmd)
+return;
+
+try{
+
+let result;
+
+if(cmd.includes("percent of")){
+
+const parts=
+cmd.match(/(\d+\.?\d*)\s*percent of\s*(\d+\.?\d*)/i);
+
+if(parts){
+
+const p=parseFloat(parts[1]);
+const v=parseFloat(parts[2]);
+
+result=(p/100)*v;
+
+input.value=
+`${p}% of ${v} = ${format(result)}`;
+
+}
+
+}else if(cmd.includes("sqrt")){
+
+const parts=
+cmd.match(/sqrt\s*(\d+\.?\d*)/i);
+
+if(parts){
+
+result=
+Math.sqrt(parseFloat(parts[1]));
+
+input.value=
+`sqrt(${parts[1]}) = ${format(result)}`;
+
+}
+
+}else if(cmd.includes("factorial")){
+
+const parts=
+cmd.match(/factorial\s*(\d+)/i);
+
+if(parts){
+
+result=
+factorial(parseInt(parts[1]));
+
+input.value=
+`${parts[1]}! = ${format(result)}`;
+
+}
+
+}else{
+
+/* try to evaluate */
+
+result=
+evaluate(cmd);
+
+input.value=
+`${cmd} = ${format(result)}`;
+
+}
+
+if(typeof result==='number' && isFinite(result)){
+
+answer=result;
+
+history.unshift({
+
+expression:cmd,
+answer:result,
+time:new Date().toLocaleString()
+
+});
+
+save();
+
+renderHistory();
+
+}
+
+document.getElementById("jarvisStatus").textContent=
+"✓ COMMAND EXECUTED";
+
+update();
+
+}catch(e){
+
+document.getElementById("jarvisStatus").textContent=
+"✗ ERROR: "+e.message;
+
+}
+
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function statistics(){
+
+const input=
+document.getElementById("statsInput");
+
+const data=
+input.value.split(/[,;\s]+/)
+.map(Number)
+.filter(n=>!isNaN(n));
+
+if(!data.length){
+
+document.getElementById("statsOutput").textContent=
+"Enter numbers separated by commas";
+
+return;
+
+}
+
+const sum=
+data.reduce((a,b)=>a+b,0);
+
+const mean=
+sum/data.length;
+
+const sorted=
+[...data].sort((a,b)=>a-b);
+
+const median=
+sorted.length%2===0
+?(sorted[sorted.length/2-1]+sorted[sorted.length/2])/2
+:sorted[Math.floor(sorted.length/2)];
+
+const variance=
+data.reduce((a,b)=>a+(b-mean)**2,0)/data.length;
+
+const std=
+Math.sqrt(variance);
+
+const min=
+Math.min(...data);
+
+const max=
+Math.max(...data);
+
+document.getElementById("statsOutput").innerHTML=
+`
+Count: ${data.length}<br>
+Sum: ${format(sum)}<br>
+Mean: ${format(mean)}<br>
+Median: ${format(median)}<br>
+Std Dev: ${format(std)}<br>
+Min: ${format(min)}<br>
+Max: ${format(max)}
+`;
+
+}
+
+
+/* =========================================================
+   PERCENTAGE
+========================================================= */
+
+function percentage(){
+
+const a=
+parseFloat(document.getElementById("percentA").value);
+
+const b=
+parseFloat(document.getElementById("percentB").value);
+
+if(isNaN(a)||isNaN(b)){
+
+document.getElementById("percentOutput").textContent=
+"Enter valid numbers";
+
+return;
+
+}
+
+const result=
+(b/100)*a;
+
+document.getElementById("percentOutput").textContent=
+`${b}% of ${a} = ${format(result)}`;
+
+}
+
+
+/* =========================================================
+   UNIT CONVERTER
+========================================================= */
+
+function convertUnit(){
+
+const value=
+parseFloat(document.getElementById("unitValue").value);
+
+const from=
+document.getElementById("unitFrom").value;
+
+const to=
+document.getElementById("unitTo").value;
+
+if(isNaN(value)){
+
+document.getElementById("unitOutput").textContent=
+"Enter a valid number";
+
+return;
+
+}
+
+/* conversion to meters or kilograms base */
+
+const units={
+
+km:1000,
+m:1,
+cm:0.01,
+mile:1609.344,
+
+kg:1,
+g:0.001,
+lb:0.453592
+
+};
+
+if(from===to){
+
+document.getElementById("unitOutput").textContent=
+`${format(value)} ${from} = ${format(value)} ${to}`;
+
+return;
+
+}
+
+/* convert to base */
+
+const inBase=
+value*units[from];
+
+/* convert from base */
+
+const result=
+inBase/units[to];
+
+document.getElementById("unitOutput").textContent=
+`${format(value)} ${from} = ${format(result)} ${to}`;
+
+}
+
+
+/* =========================================================
+   QUADRATIC
+========================================================= */
+
+function quadratic(){
+
+const a=
+parseFloat(document.getElementById("qa").value);
+
+const b=
+parseFloat(document.getElementById("qb").value);
+
+const c=
+parseFloat(document.getElementById("qc").value);
+
+if(isNaN(a)||isNaN(b)||isNaN(c)){
+
+document.getElementById("quadOutput").textContent=
+"Enter valid numbers";
+
+return;
+
+}
+
+if(a===0){
+
+document.getElementById("quadOutput").textContent=
+"a cannot be 0";
+
+return;
+
+}
+
+const d=
+b*b - 4*a*c;
+
+if(d<0){
+
+document.getElementById("quadOutput").textContent=
+"No real roots (discriminant < 0)";
+
+return;
+
+}
+
+if(d===0){
+
+const root=
+-b/(2*a);
+
+document.getElementById("quadOutput").textContent=
+`One root: ${format(root)}`;
+
+return;
+
+}
+
+const sqrtD=
+Math.sqrt(d);
+
+const root1=
+(-b + sqrtD)/(2*a);
+
+const root2=
+(-b - sqrtD)/(2*a);
+
+document.getElementById("quadOutput").textContent=
+`Root 1: ${format(root1)} | Root 2: ${format(root2)}`;
+
+}
+
+
+/* =========================================================
+   MATRIX DETERMINANT
+========================================================= */
+
+function matrixDeterminant(){
+
+const m11=
+parseFloat(document.getElementById("m11").value);
+
+const m12=
+parseFloat(document.getElementById("m12").value);
+
+const m21=
+parseFloat(document.getElementById("m21").value);
+
+const m22=
+parseFloat(document.getElementById("m22").value);
+
+if([m11,m12,m21,m22].some(isNaN)){
+
+document.getElementById("matrixOutput").textContent=
+"Enter valid numbers";
+
+return;
+
+}
+
+const det=
+m11*m22 - m12*m21;
+
+document.getElementById("matrixOutput").textContent=
+`Determinant = ${format(det)}`;
+
+}
+
+
+/* =========================================================
+   MATRIX INVERSE
+========================================================= */
+
+function matrixInverse(){
+
+const m11=
+parseFloat(document.getElementById("m11").value);
+
+const m12=
+parseFloat(document.getElementById("m12").value);
+
+const m21=
+parseFloat(document.getElementById("m21").value);
+
+const m22=
+parseFloat(document.getElementById("m22").value);
+
+if([m11,m12,m21,m22].some(isNaN)){
+
+document.getElementById("matrixOutput").textContent=
+"Enter valid numbers";
+
+return;
+
+}
+
+const det=
+m11*m22 - m12*m21;
+
+if(det===0){
+
+document.getElementById("matrixOutput").textContent=
+"Matrix is singular (det=0), no inverse";
+
+return;
+
+}
+
+const inv11=m22/det;
+const inv12=-m12/det;
+const inv21=-m21/det;
+const inv22=m11/det;
+
+document.getElementById("matrixOutput").innerHTML=
+`
+[ ${format(inv11)}  ${format(inv12)} ]<br>
+[ ${format(inv21)}  ${format(inv22)} ]
+`;
+
+}
+
+
+/* =========================================================
+   GRAPH PLOTTER
+========================================================= */
+
+function plotGraph(){
+
+const canvas=
+document.getElementById("graphCanvas");
+
+const ctx=
+canvas.getContext("2d");
+
+const fx=
+document.getElementById("fx").value;
+
+const range=
+parseFloat(document.getElementById("range").value)||10;
+
+canvas.width=canvas.clientWidth||500;
+canvas.height=canvas.clientHeight||350;
+
+const w=canvas.width;
+const h=canvas.height;
+
+ctx.clearRect(0,0,w,h);
+
+/* grid */
+
+ctx.strokeStyle="rgba(0,234,255,.08)";
+ctx.lineWidth=1;
+
+for(let i=0;i<=10;i++){
+
+const x=i*w/10;
+const y=i*h/10;
+
+ctx.beginPath();
+ctx.moveTo(x,0);
+ctx.lineTo(x,h);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(0,y);
+ctx.lineTo(w,y);
+ctx.stroke();
+
+}
+
+/* axes */
+
+ctx.strokeStyle="rgba(0,234,255,.3)";
+ctx.lineWidth=2;
+
+ctx.beginPath();
+ctx.moveTo(w/2,0);
+ctx.lineTo(w/2,h);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(0,h/2);
+ctx.lineTo(w,h/2);
+ctx.stroke();
+
+/* plot function */
+
+try{
+
+const fn=
+new Function(
+"x",
+`
+"use strict";
+return (${fx});
+`
+);
+
+ctx.strokeStyle="#00eaff";
+ctx.lineWidth=2.5;
+ctx.shadowColor="#00eaff";
+ctx.shadowBlur=10;
+
+ctx.beginPath();
+
+let started=false;
+
+for(let i=0;i<=w;i++){
+
+const x=
+range*((i/w)*2-1);
+
+try{
+
+const y=
+fn(x);
+
+if(!isFinite(y)){
+
+started=false;
+continue;
+
+}
+
+const px=i;
+const py=h/2 - (y/range)*(h/2);
+
+if(!started){
+
+ctx.moveTo(px,py);
+started=true;
+
+}else{
+
+ctx.lineTo(px,py);
+
+}
+
+}catch{
+
+started=false;
+
+}
+
+}
+
+ctx.stroke();
+
+ctx.shadowBlur=0;
+
+}catch(e){
+
+ctx.fillStyle="var(--red)";
+ctx.font="14px system-ui";
+ctx.fillText("Error: "+e.message,20,40);
+
+}
+
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+load();
+
+update();
+
+/* graph resize */
+
+setTimeout(plotGraph,100);
+
+window.addEventListener("resize",()=>{
+
+plotGraph();
+
+});
+
+</script>
+
+</body>
+        </html>
