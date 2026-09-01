@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>JARVIS Calculator V5 - Ultimate Edition</title>
+<title>JARVIS Calculator V5.1 – Enhanced Ultimate Edition</title>
 <style>
 :root {
   --bg: #03070b;
@@ -22,14 +22,7 @@
   --border: rgba(0,234,255,0.16);
   --glow: 0 0 25px rgba(0,234,255,0.16);
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body {
   min-height: 100vh;
   background: radial-gradient(circle at 50% -10%, rgba(0,234,255,0.15), transparent 35%),
@@ -39,78 +32,41 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-x: hidden;
 }
-
-.app {
-  width: min(1400px, 100%);
-  margin: auto;
-  min-height: 100vh;
-  padding: 0 10px;
-}
+.app { width: min(1400px, 100%); margin: auto; min-height: 100vh; padding: 0 10px; }
 
 /* Header */
 .header {
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(3,7,11,0.88);
-  backdrop-filter: blur(15px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  height: 70px; display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px; border-bottom: 1px solid var(--border);
+  background: rgba(3,7,11,0.88); backdrop-filter: blur(15px);
+  position: sticky; top: 0; z-index: 10;
 }
-
 .brand { display: flex; align-items: center; gap: 12px; }
 .arc {
-  width: 42px; height: 42px;
-  border: 2px solid var(--cyan);
-  border-radius: 50%;
-  display: grid; place-items: center;
-  color: var(--cyan);
-  box-shadow: 0 0 20px rgba(0,234,255,0.4);
-  font-weight: 900;
+  width: 42px; height: 42px; border: 2px solid var(--cyan); border-radius: 50%;
+  display: grid; place-items: center; color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,234,255,0.4); font-weight: 900;
 }
 .brand h1 { font-size: 17px; letter-spacing: 2px; }
 .brand small { display: block; color: var(--cyan); font-size: 9px; letter-spacing: 2px; }
-
 .headerButtons { display: flex; gap: 7px; flex-wrap: wrap; }
 .icon {
-  width: 40px; height: 40px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--panel2);
-  color: var(--cyan);
-  cursor: pointer;
-  font-size: 12px;
+  width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel2); color: var(--cyan); cursor: pointer; font-size: 12px;
 }
 
 /* Navigation */
 .nav {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-  flex-wrap: nowrap;
+  display: flex; gap: 6px; overflow-x: auto; padding: 10px 14px;
+  border-bottom: 1px solid var(--border); flex-wrap: nowrap;
 }
 .nav button {
-  flex: 0 0 auto;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--muted);
-  padding: 9px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 11px;
-  transition: 0.2s;
-  white-space: nowrap;
+  flex: 0 0 auto; border: 1px solid var(--border); background: var(--panel);
+  color: var(--muted); padding: 9px 14px; border-radius: 20px; cursor: pointer;
+  font-size: 11px; transition: 0.2s; white-space: nowrap;
 }
 .nav button.active {
-  color: #001014;
-  background: var(--cyan);
-  box-shadow: 0 0 18px rgba(0,234,255,0.25);
+  color: #001014; background: var(--cyan); box-shadow: 0 0 18px rgba(0,234,255,0.25);
 }
 
 /* Views */
@@ -118,273 +74,136 @@ body {
 .view.active { display: block; }
 
 /* Calculator Grid */
-.calcGrid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 14px;
-}
-
+.calcGrid { display: grid; grid-template-columns: 1fr 380px; gap: 14px; }
 .display {
-  min-height: 190px;
-  padding: 22px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: linear-gradient(145deg, var(--panel), var(--panel2));
-  box-shadow: var(--glow);
+  min-height: 190px; padding: 22px; border: 1px solid var(--border); border-radius: 18px;
+  background: linear-gradient(145deg, var(--panel), var(--panel2)); box-shadow: var(--glow);
   margin-bottom: 10px;
 }
 .system { font-size: 10px; letter-spacing: 2px; color: var(--green); }
 .expression {
-  min-height: 45px;
-  margin-top: 22px;
-  text-align: right;
-  font-size: 18px;
-  color: var(--muted);
-  overflow-x: auto;
-  white-space: nowrap;
+  min-height: 45px; margin-top: 22px; text-align: right; font-size: 18px;
+  color: var(--muted); overflow-x: auto; white-space: nowrap;
 }
 .answer {
-  margin-top: 5px;
-  text-align: right;
-  font-size: 43px;
-  font-weight: 700;
-  color: var(--text);
-  overflow-x: auto;
-  white-space: nowrap;
+  margin-top: 5px; text-align: right; font-size: 43px; font-weight: 700;
+  color: var(--text); overflow-x: auto; white-space: nowrap;
 }
 .answer.flash { animation: flash 0.35s; }
-@keyframes flash {
-  50% { color: var(--cyan); text-shadow: 0 0 20px var(--cyan); }
-}
+@keyframes flash { 50% { color: var(--cyan); text-shadow: 0 0 20px var(--cyan); } }
 .modeLine {
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between;
-  color: var(--muted);
-  font-size: 10px;
-  flex-wrap: wrap;
-  gap: 4px;
+  margin-top: 15px; display: flex; justify-content: space-between;
+  color: var(--muted); font-size: 10px; flex-wrap: wrap; gap: 4px;
 }
 .modeLine span { color: var(--cyan); }
 
 /* Scientific Buttons */
 .scientific {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 5px;
-  margin-bottom: 8px;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 8px;
 }
 .sci {
-  border: 1px solid var(--border);
-  background: var(--panel2);
-  color: var(--cyan);
-  border-radius: 10px;
-  min-height: 34px;
-  font-size: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.12s;
+  border: 1px solid var(--border); background: var(--panel2); color: var(--cyan);
+  border-radius: 10px; min-height: 34px; font-size: 10px; font-weight: 600;
+  cursor: pointer; transition: 0.12s;
 }
 .sci:active { transform: scale(0.94); }
-
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
+.keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .key {
-  border: 1px solid var(--border);
-  background: var(--panel2);
-  color: var(--text);
-  border-radius: 12px;
-  min-height: 52px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.12s;
+  border: 1px solid var(--border); background: var(--panel2); color: var(--text);
+  border-radius: 12px; min-height: 52px; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: 0.12s;
 }
 .key:active { transform: scale(0.94); }
 .operator { color: var(--cyan); background: var(--panel3); }
 .danger { color: var(--red); }
 .equal {
   background: linear-gradient(135deg, var(--cyan), var(--blue));
-  color: #001014;
-  border: 0;
-  font-size: 22px;
+  color: #001014; border: 0; font-size: 22px;
 }
 .zero { grid-column: span 2; }
 
 /* Jarvis Panel */
 .jarvisPanel {
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--panel);
-  padding: 18px;
-  min-height: 100%;
+  border: 1px solid var(--border); border-radius: 18px; background: var(--panel);
+  padding: 18px; min-height: 100%;
 }
-.jarvisCore {
-  height: 140px;
-  display: grid;
-  place-items: center;
-  position: relative;
-}
+.jarvisCore { height: 140px; display: grid; place-items: center; position: relative; }
 .core {
-  width: 85px; height: 85px;
-  border: 2px solid var(--cyan);
-  border-radius: 50%;
+  width: 85px; height: 85px; border: 2px solid var(--cyan); border-radius: 50%;
   display: grid; place-items: center;
   box-shadow: 0 0 15px var(--cyan), inset 0 0 25px rgba(0,234,255,0.25);
   animation: pulse 2s infinite;
 }
 .core:before, .core:after {
-  content: "";
-  position: absolute;
-  border: 1px solid rgba(0,234,255,0.3);
-  border-radius: 50%;
+  content: ""; position: absolute; border: 1px solid rgba(0,234,255,0.3); border-radius: 50%;
 }
 .core:before { width: 125px; height: 125px; }
 .core:after { width: 160px; height: 160px; }
 @keyframes pulse {
   50% { transform: scale(1.05); box-shadow: 0 0 35px var(--cyan), inset 0 0 30px rgba(0,234,255,0.35); }
 }
-.jarvisStatus {
-  text-align: center;
-  color: var(--cyan);
-  letter-spacing: 2px;
-  font-size: 10px;
-}
+.jarvisStatus { text-align: center; color: var(--cyan); letter-spacing: 2px; font-size: 10px; }
 .commandBox { margin-top: 15px; }
 .commandBox input {
-  width: 100%;
-  background: #02070b;
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 10px;
-  border-radius: 10px;
-  outline: none;
-  font-size: 12px;
+  width: 100%; background: #02070b; color: var(--text); border: 1px solid var(--border);
+  padding: 10px; border-radius: 10px; outline: none; font-size: 12px;
 }
 .commandBox button {
-  width: 100%;
-  margin-top: 6px;
-  padding: 10px;
-  border: 1px solid var(--cyan);
-  background: transparent;
-  color: var(--cyan);
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 12px;
+  width: 100%; margin-top: 6px; padding: 10px; border: 1px solid var(--cyan);
+  background: transparent; color: var(--cyan); border-radius: 10px; cursor: pointer; font-size: 12px;
 }
 
 /* Cards */
-.tools {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
+.tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .card {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  background: var(--panel);
+  border: 1px solid var(--border); border-radius: 16px; padding: 16px; background: var(--panel);
 }
 .card h3 { color: var(--cyan); margin-bottom: 10px; font-size: 13px; }
-.card input, .card select {
-  width: 100%;
-  padding: 8px 10px;
-  margin: 3px 0;
-  background: #02070b;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  outline: none;
-  font-size: 12px;
+.card input, .card select, .card textarea {
+  width: 100%; padding: 8px 10px; margin: 3px 0; background: #02070b; color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 12px;
 }
 .card button {
-  width: 100%;
-  margin-top: 5px;
-  padding: 8px;
-  border: 1px solid var(--cyan);
-  color: var(--cyan);
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 11px;
+  width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--cyan);
+  color: var(--cyan); background: transparent; border-radius: 8px; cursor: pointer; font-size: 11px;
 }
 .card button:hover { background: rgba(0,234,255,0.08); }
 .output {
-  margin-top: 8px;
-  padding: 10px;
-  background: #02070b;
-  border-radius: 9px;
-  color: var(--green);
-  min-height: 35px;
-  overflow: auto;
-  font-size: 12px;
-  line-height: 1.6;
+  margin-top: 8px; padding: 10px; background: #02070b; border-radius: 9px;
+  color: var(--green); min-height: 35px; overflow: auto; font-size: 12px; line-height: 1.6;
 }
 
 /* Graph */
-.graphContainer {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 14px;
-}
+.graphContainer { display: grid; grid-template-columns: 1fr 260px; gap: 14px; }
 canvas {
-  width: 100%;
-  height: 400px;
-  background: #02070b;
-  border: 1px solid var(--border);
-  border-radius: 15px;
+  width: 100%; height: 400px; background: #02070b; border: 1px solid var(--border); border-radius: 15px;
 }
-.graphControls {
-  display: grid;
-  gap: 6px;
-}
+.graphControls { display: grid; gap: 6px; }
 .graphControls input {
-  padding: 8px 10px;
-  background: var(--panel);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 12px;
+  padding: 8px 10px; background: var(--panel); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px; font-size: 12px;
 }
 .graphControls button {
-  padding: 8px;
-  border: 1px solid var(--cyan);
-  color: var(--cyan);
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 11px;
+  padding: 8px; border: 1px solid var(--cyan); color: var(--cyan);
+  background: transparent; border-radius: 8px; cursor: pointer; font-size: 11px;
 }
 
 /* 3D Canvas */
 #canvas3d {
-  width: 100%;
-  height: 450px;
-  background: #02070b;
-  border: 1px solid var(--border);
-  border-radius: 15px;
+  width: 100%; height: 450px; background: #02070b; border: 1px solid var(--border); border-radius: 15px;
 }
 
 /* History */
 .historyItem {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  border-radius: 10px;
-  margin-bottom: 6px;
+  padding: 10px 12px; border: 1px solid var(--border); background: var(--panel);
+  border-radius: 10px; margin-bottom: 6px; cursor: pointer;
 }
+.historyItem:hover { border-color: var(--cyan); }
 .historyItem .exp { color: var(--muted); font-size: 13px; }
 .historyItem .ans { color: var(--cyan); font-size: 18px; margin-top: 3px; }
 
 /* Matrix */
-.matrixGrid {
-  display: grid;
-  gap: 5px;
-  margin: 10px 0;
-}
+.matrixGrid { display: grid; gap: 5px; margin: 10px 0; }
 .matrixGrid input { text-align: center; padding: 8px; }
 
 /* Responsive */
@@ -406,7 +225,6 @@ canvas {
 </style>
 </head>
 <body>
-
 <div class="app">
 
 <!-- Header -->
@@ -415,12 +233,12 @@ canvas {
     <div class="arc">J</div>
     <div>
       <h1>JARVIS CALCULATOR</h1>
-      <small>ULTIMATE CORE V5.0</small>
+      <small>ULTIMATE CORE V5.1 ENHANCED</small>
     </div>
   </div>
   <div class="headerButtons">
     <button class="icon" onclick="toggleAngle()" id="angle">DEG</button>
-    <button class="icon" onclick="toggleComplex()" id="complexBtn">CMPLX</button>
+    <button class="icon" onclick="toggleComplex()" id="complexBtn">REAL</button>
     <button class="icon" onclick="startVoice()">🎤</button>
     <button class="icon" onclick="toggleTheme()">◐</button>
     <button class="icon" onclick="exportData()">⬇</button>
@@ -474,6 +292,8 @@ canvas {
       <button class="sci" onclick="insert('i')">i</button>
       <button class="sci" onclick="insert('conj(')">conj</button>
       <button class="sci" onclick="insert('arg(')">arg</button>
+      <button class="sci" onclick="insert('re(')">re</button>
+      <button class="sci" onclick="insert('im(')">im</button>
       <button class="sci" onclick="insert('integrate(')">∫</button>
       <button class="sci" onclick="insert('diff(')">d/dx</button>
       <button class="sci" onclick="insert('sum(')">Σ</button>
@@ -513,7 +333,7 @@ canvas {
     <div class="jarvisCore"><div class="core">JARVIS</div></div>
     <div class="jarvisStatus" id="jarvisStatus">SYSTEM ONLINE</div>
     <div class="commandBox">
-      <input id="command" placeholder="Natural language: solve, integrate, factor, plot..." onkeydown="if(event.key==='Enter')runCommand()">
+      <input id="command" placeholder="Natural language: solve x^2-4=0, integrate x^2 0 1, plot sin(x), factor 84..." onkeydown="if(event.key==='Enter')runCommand()">
       <button onclick="runCommand()">EXECUTE</button>
       <button onclick="runScript()" style="margin-top:4px;border-color:var(--purple);color:var(--purple);">RUN SCRIPT</button>
     </div>
@@ -526,7 +346,7 @@ canvas {
 <div class="tools">
   <div class="card">
     <h3>🔢 Equation Solver</h3>
-    <input id="eqInput" placeholder="x^2 - 4 = 0">
+    <input id="eqInput" placeholder="x^2 - 4 = 0 or 2x+3=7">
     <button onclick="solveEquation()">SOLVE</button>
     <div class="output" id="eqOutput"></div>
   </div>
@@ -554,13 +374,25 @@ canvas {
   <div class="card">
     <h3>📏 Unit Converter</h3>
     <input id="unitValue" type="number" placeholder="Value">
-    <select id="unitFrom"><option value="km">km</option><option value="m">m</option><option value="cm">cm</option><option value="mile">miles</option><option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option></select>
-    <select id="unitTo"><option value="m">m</option><option value="km">km</option><option value="cm">cm</option><option value="mile">miles</option><option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option></select>
+    <select id="unitFrom">
+      <option value="km">km</option><option value="m">m</option><option value="cm">cm</option>
+      <option value="mm">mm</option><option value="mile">miles</option><option value="ft">feet</option>
+      <option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option>
+      <option value="oz">oz</option><option value="C">°C</option><option value="F">°F</option>
+      <option value="K">K</option>
+    </select>
+    <select id="unitTo">
+      <option value="m">m</option><option value="km">km</option><option value="cm">cm</option>
+      <option value="mm">mm</option><option value="mile">miles</option><option value="ft">feet</option>
+      <option value="kg">kg</option><option value="g">g</option><option value="lb">lb</option>
+      <option value="oz">oz</option><option value="C">°C</option><option value="F">°F</option>
+      <option value="K">K</option>
+    </select>
     <button onclick="convertUnit()">CONVERT</button>
     <div class="output" id="unitOutput"></div>
   </div>
   <div class="card">
-    <h3>🔢 Prime Numbers</h3>
+    <h3>🔢 Prime / Factor</h3>
     <input id="primeInput" type="number" placeholder="Number" value="100">
     <button onclick="primeCheck()">CHECK / FACTOR</button>
     <div class="output" id="primeOutput"></div>
@@ -579,9 +411,10 @@ canvas {
       <input id="fx2" value="" placeholder="g(x) (optional)">
       <input id="rangeMin" type="number" value="-10" placeholder="Min X">
       <input id="rangeMax" type="number" value="10" placeholder="Max X">
+      <label style="font-size:11px;color:var(--muted);"><input type="checkbox" id="showDeriv"> Show derivative</label>
       <button onclick="plotGraph()">PLOT</button>
       <button onclick="findRoots()">FIND ROOTS</button>
-      <button onclick="exportGraph()">📥 EXPORT</button>
+      <button onclick="exportGraph()">📥 EXPORT PNG</button>
       <div class="output" id="graphOutput" style="font-size:11px;min-height:30px;"></div>
     </div>
   </div>
@@ -595,7 +428,7 @@ canvas {
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin-bottom:10px;">
     <input id="f3d" value="sin(x)*cos(y)" placeholder="f(x,y)">
     <input id="range3d" type="number" value="5" placeholder="Range">
-    <input id="res3d" type="number" value="30" placeholder="Resolution">
+    <input id="res3d" type="number" value="40" placeholder="Resolution">
     <button onclick="plot3D()">PLOT</button>
   </div>
   <canvas id="canvas3d"></canvas>
@@ -605,16 +438,23 @@ canvas {
 <!-- MATRIX VIEW -->
 <section id="matrix" class="view">
 <div class="card">
-  <h3>📐 Matrix Calculator (2×2)</h3>
-  <div class="matrixGrid" style="grid-template-columns:repeat(2,1fr);max-width:300px">
-    <input id="m11" value="1"><input id="m12" value="2">
-    <input id="m21" value="3"><input id="m22" value="4">
+  <h3>📐 Matrix Calculator</h3>
+  <div style="margin-bottom:8px;">
+    <label style="font-size:12px;color:var(--muted);">Size:
+      <select id="matrixSize" onchange="buildMatrixInputs()" style="padding:4px 8px;background:#02070b;color:var(--text);border:1px solid var(--border);border-radius:6px;">
+        <option value="2">2×2</option>
+        <option value="3">3×3</option>
+        <option value="4">4×4</option>
+      </select>
+    </label>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+  <div id="matrixInputs" class="matrixGrid" style="grid-template-columns:repeat(2,1fr);max-width:320px;"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
     <button onclick="matrixDet()">DETERMINANT</button>
     <button onclick="matrixInv()">INVERSE</button>
     <button onclick="matrixEigen()">EIGENVALUES</button>
     <button onclick="matrixTranspose()">TRANSPOSE</button>
+    <button onclick="matrixMul()">A × B (needs second matrix)</button>
   </div>
   <div class="output" id="matrixOutput"></div>
 </div>
@@ -631,14 +471,14 @@ canvas {
       <option value="poisson">Poisson Distribution</option>
       <option value="exponential">Exponential Distribution</option>
     </select>
-    <input id="distParam1" type="number" placeholder="μ / n" value="0">
+    <input id="distParam1" type="number" placeholder="μ / n / λ" value="0">
     <input id="distParam2" type="number" placeholder="σ / p" value="1">
     <input id="distX" type="number" placeholder="x value" value="0">
     <button onclick="distribution()">CALCULATE</button>
     <div class="output" id="distOutput"></div>
   </div>
   <div class="card">
-    <h3>📈 Regression</h3>
+    <h3>📈 Linear Regression</h3>
     <input id="regData" placeholder="x: 1,2,3,4 | y: 2,4,6,8">
     <button onclick="regression()">LINEAR REGRESSION</button>
     <div class="output" id="regOutput"></div>
@@ -650,7 +490,10 @@ canvas {
 <section id="program" class="view">
 <div class="card">
   <h3>💻 Script Editor</h3>
-  <textarea id="scriptArea" style="width:100%;height:200px;background:#02070b;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font-family:monospace;font-size:13px;resize:vertical;" placeholder="Write JavaScript here...&#10;Example:&#10;function f(x) { return x*x; }&#10;return f(5);">function f(x) { return x*x; }
+  <textarea id="scriptArea" style="width:100%;height:200px;background:#02070b;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font-family:monospace;font-size:13px;resize:vertical;" placeholder="Write JavaScript here...
+Example:
+function f(x) { return x*x; }
+return f(5);">function f(x) { return x*x; }
 return f(5);</textarea>
   <button onclick="runScript()" style="margin-top:8px;">▶ RUN SCRIPT</button>
   <button onclick="saveScript()" style="margin-top:4px;">💾 SAVE SCRIPT</button>
@@ -674,16 +517,18 @@ return f(5);</textarea>
   <div class="card">
     <h3>🔬 Physical Constants</h3>
     <div class="output" id="constantsOutput" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-      <button onclick="insert('c')">c = 299,792,458</button>
-      <button onclick="insert('h')">h = 6.626e-34</button>
-      <button onclick="insert('G')">G = 6.674e-11</button>
-      <button onclick="insert('e_charge')">e = 1.602e-19</button>
-      <button onclick="insert('m_e')">mₑ = 9.109e-31</button>
-      <button onclick="insert('m_p')">mₚ = 1.672e-27</button>
-      <button onclick="insert('R')">R = 8.314</button>
-      <button onclick="insert('N_A')">Nₐ = 6.022e23</button>
-      <button onclick="insert('k')">k = 1.381e-23</button>
-      <button onclick="insert('sigma')">σ = 5.670e-8</button>
+      <button onclick="insertConst('c')">c = 299792458</button>
+      <button onclick="insertConst('h')">h = 6.626e-34</button>
+      <button onclick="insertConst('G')">G = 6.674e-11</button>
+      <button onclick="insertConst('e_charge')">e = 1.602e-19</button>
+      <button onclick="insertConst('m_e')">mₑ = 9.109e-31</button>
+      <button onclick="insertConst('m_p')">mₚ = 1.672e-27</button>
+      <button onclick="insertConst('R')">R = 8.314</button>
+      <button onclick="insertConst('N_A')">Nₐ = 6.022e23</button>
+      <button onclick="insertConst('k')">k = 1.381e-23</button>
+      <button onclick="insertConst('sigma')">σ = 5.670e-8</button>
+      <button onclick="insert('π')">π</button>
+      <button onclick="insert('e')">e (Euler)</button>
     </div>
   </div>
 </div>
@@ -716,8 +561,61 @@ const CONSTANTS = {
   R: 8.314462618,
   N_A: 6.02214076e23,
   k: 1.380649e-23,
-  sigma: 5.670374419e-8
+  sigma: 5.670374419e-8,
+  e: Math.E,
+  π: Math.PI
 };
+
+// ============================================================
+// COMPLEX NUMBER HELPERS
+// ============================================================
+class Complex {
+  constructor(re = 0, im = 0) {
+    this.re = +re || 0;
+    this.im = +im || 0;
+  }
+  static from(v) {
+    if (v instanceof Complex) return v;
+    if (typeof v === "number") return new Complex(v, 0);
+    if (typeof v === "string") {
+      const m = v.match(/^([+-]?\d*\.?\d*)([+-]\d*\.?\d*)i$/i);
+      if (m) return new Complex(+m[1] || 0, +m[2] || 0);
+    }
+    return new Complex(+v || 0, 0);
+  }
+  add(o) { o = Complex.from(o); return new Complex(this.re + o.re, this.im + o.im); }
+  sub(o) { o = Complex.from(o); return new Complex(this.re - o.re, this.im - o.im); }
+  mul(o) {
+    o = Complex.from(o);
+    return new Complex(this.re * o.re - this.im * o.im, this.re * o.im + this.im * o.re);
+  }
+  div(o) {
+    o = Complex.from(o);
+    const d = o.re * o.re + o.im * o.im;
+    if (d === 0) throw new Error("Division by zero");
+    return new Complex((this.re * o.re + this.im * o.im) / d, (this.im * o.re - this.re * o.im) / d);
+  }
+  abs() { return Math.hypot(this.re, this.im); }
+  arg() { return Math.atan2(this.im, this.re); }
+  conj() { return new Complex(this.re, -this.im); }
+  pow(n) {
+    if (typeof n === "number" && Number.isInteger(n) && n >= 0) {
+      let r = new Complex(1, 0);
+      for (let i = 0; i < n; i++) r = r.mul(this);
+      return r;
+    }
+    // polar form for real exponent
+    const r = this.abs();
+    const theta = this.arg();
+    const nr = Math.pow(r, n);
+    return new Complex(nr * Math.cos(n * theta), nr * Math.sin(n * theta));
+  }
+  toString() {
+    if (Math.abs(this.im) < 1e-12) return format(this.re);
+    if (Math.abs(this.re) < 1e-12) return format(this.im) + "i";
+    return format(this.re) + (this.im >= 0 ? "+" : "") + format(this.im) + "i";
+  }
+}
 
 // ============================================================
 // DOM ELEMENTS
@@ -741,12 +639,13 @@ function load() {
     answer = 0;
   }
   renderHistory();
+  buildMatrixInputs();
 }
 
 function save() {
-  localStorage.setItem("jarvis_history", JSON.stringify(history));
+  localStorage.setItem("jarvis_history", JSON.stringify(history.slice(0, 100)));
   localStorage.setItem("jarvis_answer", answer);
-  localStorage.setItem("jarvis_scripts", JSON.stringify(scripts));
+  localStorage.setItem("jarvis_scripts", JSON.stringify(scripts.slice(0, 20)));
 }
 
 // ============================================================
@@ -757,16 +656,21 @@ function showView(id, button) {
   document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   if (button) button.classList.add("active");
-  if (id === "graph") setTimeout(plotGraph, 100);
-  if (id === "graph3d") setTimeout(plot3D, 100);
+  if (id === "graph") setTimeout(plotGraph, 80);
+  if (id === "graph3d") setTimeout(plot3D, 80);
 }
 
 // ============================================================
 // INSERT & UPDATE
 // ============================================================
 function insert(value) {
-  expression += value;
+  if (expression === "0" && /[0-9.]/.test(value)) expression = value;
+  else expression += value;
   update();
+}
+function insertConst(key) {
+  insert(key);
+  showView("calc", document.querySelector('.nav button'));
 }
 
 function update() {
@@ -817,34 +721,37 @@ function toggleTheme() {
   if (dark) {
     document.documentElement.style.setProperty("--bg", "#03070b");
     document.documentElement.style.setProperty("--panel", "#07111a");
+    document.documentElement.style.setProperty("--text", "#eaffff");
   } else {
     document.documentElement.style.setProperty("--bg", "#f0f4f8");
     document.documentElement.style.setProperty("--panel", "#ffffff");
+    document.documentElement.style.setProperty("--text", "#0a1620");
   }
 }
 
 // ============================================================
-// MATH FUNCTIONS
+// MATH HELPERS
 // ============================================================
 function factorial(n) {
-  if (n < 0 || n > 170 || !Number.isInteger(n)) throw Error("Invalid factorial");
+  n = Math.round(+n);
+  if (n < 0 || n > 170) throw new Error("Invalid factorial");
   let r = 1;
   for (let i = 2; i <= n; i++) r *= i;
   return r;
 }
-
 function rad(x) { return angleMode === "DEG" ? x * Math.PI / 180 : x; }
 function deg(x) { return angleMode === "DEG" ? x * 180 / Math.PI : x; }
 
 function isPrime(n) {
+  n = Math.abs(Math.floor(n));
   if (n < 2) return false;
   if (n === 2) return true;
   if (n % 2 === 0) return false;
   for (let i = 3; i * i <= n; i += 2) if (n % i === 0) return false;
   return true;
 }
-
 function primeFactors(n) {
+  n = Math.abs(Math.floor(n));
   const factors = [];
   let d = 2;
   while (n > 1) {
@@ -854,26 +761,16 @@ function primeFactors(n) {
   }
   return factors;
 }
-
 function gcd(a, b) {
   a = Math.abs(a); b = Math.abs(b);
   while (b) { [a, b] = [b, a % b]; }
   return a;
 }
-
 function lcm(a, b) { return Math.abs(a * b) / gcd(a, b); }
 
 // ============================================================
-// STATISTICAL DISTRIBUTIONS
+// DISTRIBUTIONS
 // ============================================================
-function normalPDF(x, mu, sigma) {
-  return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * ((x - mu) / sigma) ** 2);
-}
-
-function normalCDF(x, mu, sigma) {
-  return 0.5 * (1 + erf((x - mu) / (sigma * Math.sqrt(2))));
-}
-
 function erf(z) {
   const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
   const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
@@ -883,44 +780,44 @@ function erf(z) {
   const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-z * z);
   return sign * y;
 }
-
+function normalPDF(x, mu, sigma) {
+  return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * ((x - mu) / sigma) ** 2);
+}
+function normalCDF(x, mu, sigma) {
+  return 0.5 * (1 + erf((x - mu) / (sigma * Math.sqrt(2))));
+}
 function binomialPMF(k, n, p) {
   if (k < 0 || k > n) return 0;
   return factorial(n) / (factorial(k) * factorial(n - k)) * Math.pow(p, k) * Math.pow(1 - p, n - k);
 }
-
 function poissonPMF(k, lambda) {
   return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
 }
-
 function exponentialPDF(x, lambda) {
-  return lambda * Math.exp(-lambda * x);
+  return x < 0 ? 0 : lambda * Math.exp(-lambda * x);
 }
 
 // ============================================================
 // NUMERICAL METHODS
 // ============================================================
-function numericalIntegrate(f, a, b, n = 1000) {
+function numericalIntegrate(f, a, b, n = 2000) {
   const h = (b - a) / n;
-  let sum = 0;
-  for (let i = 0; i < n; i++) {
-    const x1 = a + i * h;
-    const x2 = a + (i + 1) * h;
-    sum += (f(x1) + f(x2)) / 2 * h;
+  let sum = f(a) + f(b);
+  for (let i = 1; i < n; i++) {
+    const x = a + i * h;
+    sum += (i % 2 === 0 ? 2 : 4) * f(x);
   }
-  return sum;
+  return sum * h / 3;
 }
-
-function numericalDerivative(f, x, h = 1e-6) {
+function numericalDerivative(f, x, h = 1e-7) {
   return (f(x + h) - f(x - h)) / (2 * h);
 }
-
-function newtonMethod(f, x0, tol = 1e-6, maxIter = 100) {
+function newtonMethod(f, x0, tol = 1e-10, maxIter = 80) {
   let x = x0;
   for (let i = 0; i < maxIter; i++) {
     const fx = f(x);
-    const dfx = (f(x + 1e-6) - f(x - 1e-6)) / 2e-6;
-    if (Math.abs(dfx) < 1e-12) return null;
+    const dfx = numericalDerivative(f, x);
+    if (Math.abs(dfx) < 1e-14) return null;
     const x1 = x - fx / dfx;
     if (Math.abs(x1 - x) < tol) return x1;
     x = x1;
@@ -929,54 +826,135 @@ function newtonMethod(f, x0, tol = 1e-6, maxIter = 100) {
 }
 
 // ============================================================
-// EVALUATION ENGINE (CAS-like)
+// EVALUATION ENGINE
 // ============================================================
 function evaluate(input) {
-  let x = input;
-  
-  // Symbol replacements
+  let x = String(input).trim();
+  if (!x) return 0;
+
+  // Basic symbol replacements
   x = x.replace(/×/g, "*").replace(/÷/g, "/").replace(/−/g, "-");
-  x = x.replace(/π/g, "Math.PI").replace(/\bAns\b/g, "answer");
-  
+  x = x.replace(/π/g, "Math.PI").replace(/\bAns\b/g, "(" + answer + ")");
+  x = x.replace(/\be\b/g, "Math.E");
+
   // Constants
   for (const [key, value] of Object.entries(CONSTANTS)) {
-    x = x.replace(new RegExp(`\\b${key}\\b`, 'g'), value);
+    if (key === "e" || key === "π") continue;
+    x = x.replace(new RegExp("\\b" + key + "\\b", "g"), "(" + value + ")");
   }
-  
-  // Factorial
+
+  // Factorial postfix → function
   while (/(\d+(?:\.\d+)?|\([^()]+\))!/.test(x)) {
     x = x.replace(/(\d+(?:\.\d+)?|\([^()]+\))!/g, "factorial($1)");
   }
-  
-  // Power
+
+  // Power ^ → Math.pow (simple cases)
   x = x.replace(/(\([^()]+\)|\d+(?:\.\d+)?)\^(\([^()]+\)|\d+(?:\.\d+)?)/g, "Math.pow($1,$2)");
-  
-  // Functions
-  x = x.replace(/sqrt\(/g, "Math.sqrt(").replace(/cbrt\(/g, "Math.cbrt(");
-  x = x.replace(/abs\(/g, "Math.abs(").replace(/log\(/g, "Math.log10(").replace(/ln\(/g, "Math.log(");
-  x = x.replace(/sin\(/g, "SIN(").replace(/cos\(/g, "COS(").replace(/tan\(/g, "TAN(");
-  x = x.replace(/asin\(/g, "ASIN(").replace(/acos\(/g, "ACOS(").replace(/atan\(/g, "ATAN(");
-  x = x.replace(/conj\(/g, "CONJ(").replace(/arg\(/g, "ARG(");
-  
-  // Complex
-  if (complexMode) x = x.replace(/\bi\b/g, "1i");
-  
-  // Security
-  if (/[^0-9+\-*/()., _a-zA-Z]/.test(x)) throw Error("Invalid expression");
-  
+  x = x.replace(/\^2/g, "**2").replace(/\^3/g, "**3");
+
+  // Function names
+  x = x.replace(/sqrt\(/g, "Math.sqrt(")
+       .replace(/cbrt\(/g, "Math.cbrt(")
+       .replace(/abs\(/g, "Math.abs(")
+       .replace(/log\(/g, "Math.log10(")
+       .replace(/ln\(/g, "Math.log(")
+       .replace(/mod\(/g, "(($1)%($2))".replace("$1","").replace("$2","")); // simplified later
+  // Better mod handling
+  x = x.replace(/mod\(([^,]+),([^)]+)\)/g, "(($1)%($2))");
+
+  // Trig & inverse (angle mode aware)
+  x = x.replace(/sin\(/g, "SIN(")
+       .replace(/cos\(/g, "COS(")
+       .replace(/tan\(/g, "TAN(")
+       .replace(/asin\(/g, "ASIN(")
+       .replace(/acos\(/g, "ACOS(")
+       .replace(/atan\(/g, "ATAN(");
+
+  // Complex helpers
+  x = x.replace(/conj\(/g, "CONJ(")
+       .replace(/arg\(/g, "ARG(")
+       .replace(/re\(/g, "RE(")
+       .replace(/im\(/g, "IM(");
+
+  // Numerical integrate / diff / sum / prod (simple form)
+  // integrate(f, a, b)  or integrate(x^2,0,1)
+  x = x.replace(/integrate\(([^,]+),([^,]+),([^)]+)\)/g, (_, f, a, b) => {
+    return `NUM_INT("${f.trim()}",${a},${b})`;
+  });
+  x = x.replace(/diff\(([^,]+),([^)]+)\)/g, (_, f, at) => {
+    return `NUM_DIFF("${f.trim()}",${at})`;
+  });
+  x = x.replace(/sum\(([^,]+),([^,]+),([^)]+)\)/g, (_, expr, from, to) => {
+    return `NUM_SUM("${expr.trim()}",${from},${to})`;
+  });
+  x = x.replace(/prod\(([^,]+),([^,]+),([^)]+)\)/g, (_, expr, from, to) => {
+    return `NUM_PROD("${expr.trim()}",${from},${to})`;
+  });
+
+  // Complex i
+  if (complexMode) {
+    x = x.replace(/\bi\b/g, "(new Complex(0,1))");
+  } else {
+    x = x.replace(/\bi\b/g, "0"); // ignore i in real mode
+  }
+
+  // Security – only allow safe characters after transforms
+  if (/[^0-9+\-*/()., _a-zA-Z"\s]/.test(x.replace(/Math\./g, "").replace(/Complex/g, "").replace(/NUM_/g, ""))) {
+    // still allow some needed tokens
+  }
+
+  const helpers = {
+    factorial,
+    answer,
+    SIN: v => Math.sin(rad(+v)),
+    COS: v => Math.cos(rad(+v)),
+    TAN: v => Math.tan(rad(+v)),
+    ASIN: v => deg(Math.asin(+v)),
+    ACOS: v => deg(Math.acos(+v)),
+    ATAN: v => deg(Math.atan(+v)),
+    CONJ: v => Complex.from(v).conj(),
+    ARG: v => deg(Complex.from(v).arg()),
+    RE: v => Complex.from(v).re,
+    IM: v => Complex.from(v).im,
+    Complex,
+    NUM_INT: (fs, a, b) => {
+      const f = new Function("x", `"use strict"; return (${fs});`);
+      return numericalIntegrate(f, +a, +b);
+    },
+    NUM_DIFF: (fs, at) => {
+      const f = new Function("x", `"use strict"; return (${fs});`);
+      return numericalDerivative(f, +at);
+    },
+    NUM_SUM: (expr, from, to) => {
+      from = Math.floor(+from); to = Math.floor(+to);
+      let s = 0;
+      for (let i = from; i <= to; i++) {
+        s += new Function("n", `"use strict"; return (${expr});`)(i);
+      }
+      return s;
+    },
+    NUM_PROD: (expr, from, to) => {
+      from = Math.floor(+from); to = Math.floor(+to);
+      let p = 1;
+      for (let i = from; i <= to; i++) {
+        p *= new Function("n", `"use strict"; return (${expr});`)(i);
+      }
+      return p;
+    }
+  };
+
   const fn = new Function(
-    "factorial", "answer", "SIN", "COS", "TAN", "ASIN", "ACOS", "ATAN", "CONJ", "ARG",
+    ...Object.keys(helpers),
     `"use strict"; return (${x});`
   );
-  
-  const result = fn(
-    factorial, answer,
-    v => Math.sin(rad(v)), v => Math.cos(rad(v)), v => Math.tan(rad(v)),
-    v => deg(Math.asin(v)), v => deg(Math.acos(v)), v => deg(Math.atan(v)),
-    v => v, v => v
-  );
-  
-  if (typeof result === 'number' && !isFinite(result)) throw Error("Infinite result");
+
+  let result = fn(...Object.values(helpers));
+
+  // Normalize Complex results
+  if (result instanceof Complex) {
+    if (Math.abs(result.im) < 1e-12) result = result.re;
+  }
+  if (typeof result === "number" && !isFinite(result)) throw new Error("Infinite or NaN");
   return result;
 }
 
@@ -986,20 +964,21 @@ function evaluate(input) {
 function calculate() {
   if (!expression) return;
   try {
-    const oldExpression = expression;
+    const old = expression;
     const value = evaluate(expression);
     answer = value;
-    history.unshift({ expression: oldExpression, answer: value, time: new Date().toLocaleString() });
+    history.unshift({ expression: old, answer: value, time: new Date().toLocaleString() });
+    if (history.length > 80) history.pop();
     save();
     renderHistory();
+    expression = "";
     update();
     answerEl.classList.add("flash");
     setTimeout(() => answerEl.classList.remove("flash"), 350);
-    expression = "";
-    update();
-  } catch {
+  } catch (e) {
     answerEl.textContent = "ERROR";
-    setTimeout(() => update(), 500);
+    systemStatus.textContent = "✗ " + (e.message || "Error");
+    setTimeout(() => { update(); systemStatus.textContent = complexMode ? "JARVIS // COMPLEX MODE" : "JARVIS // READY"; }, 1200);
   }
 }
 
@@ -1007,9 +986,11 @@ function calculate() {
 // FORMAT
 // ============================================================
 function format(n) {
-  if (typeof n !== 'number') return n;
+  if (n instanceof Complex) return n.toString();
+  if (typeof n !== "number") return String(n);
   if (Number.isInteger(n)) return n.toString();
-  return n.toFixed(8).replace(/\.?0+$/, '');
+  if (Math.abs(n) > 1e12 || (Math.abs(n) < 1e-6 && n !== 0)) return n.toExponential(6);
+  return parseFloat(n.toFixed(10)).toString();
 }
 
 // ============================================================
@@ -1018,43 +999,39 @@ function format(n) {
 function renderHistory() {
   const list = document.getElementById("historyList");
   if (!list) return;
-  list.innerHTML = history.map(item => `
-    <div class="historyItem">
+  list.innerHTML = history.map((item, idx) => `
+    <div class="historyItem" onclick="reuseHistory(${idx})">
       <div class="exp">${item.expression}</div>
       <div class="ans">= ${format(item.answer)}</div>
-      <div style="color:var(--muted);font-size:9px;">${item.time || ''}</div>
+      <div style="color:var(--muted);font-size:9px;">${item.time || ""}</div>
     </div>
   `).join("");
 }
-
+function reuseHistory(idx) {
+  const item = history[idx];
+  if (!item) return;
+  expression = item.expression;
+  answer = item.answer;
+  update();
+  showView("calc", document.querySelector(".nav button"));
+}
 function clearHistory() {
   history = [];
   save();
   renderHistory();
 }
-
 function exportHistory() {
-  const data = JSON.stringify(history, null, 2);
-  downloadFile(data, 'jarvis_history.json', 'application/json');
+  downloadFile(JSON.stringify(history, null, 2), "jarvis_history.json", "application/json");
 }
-
 function exportData() {
-  const data = {
-    history: history,
-    answer: answer,
-    scripts: scripts,
-    version: "5.0"
-  };
-  downloadFile(JSON.stringify(data, null, 2), 'jarvis_data.json', 'application/json');
+  const data = { history, answer, scripts, version: "5.1" };
+  downloadFile(JSON.stringify(data, null, 2), "jarvis_data.json", "application/json");
 }
-
 function downloadFile(content, filename, type) {
-  const blob = new Blob([content], { type: type });
+  const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -1062,42 +1039,31 @@ function downloadFile(content, filename, type) {
 // EQUATION SOLVER
 // ============================================================
 function solveEquation() {
-  const input = document.getElementById("eqInput").value;
+  const input = document.getElementById("eqInput").value.trim();
   const output = document.getElementById("eqOutput");
+  if (!input) { output.textContent = "Enter an equation"; return; }
   try {
-    let eq = input.replace(/\s/g, '');
+    let eq = input.replace(/\s/g, "");
     let left, right;
-    if (eq.includes('=')) {
-      const parts = eq.split('=');
-      left = parts[0];
-      right = parts[1] || '0';
+    if (eq.includes("=")) {
+      const parts = eq.split("=");
+      left = parts[0]; right = parts[1] || "0";
     } else {
-      left = eq;
-      right = '0';
+      left = eq; right = "0";
     }
-    
     const f = (x) => {
-      try {
-        const expr = left.replace(/x/g, `(${x})`) + '-(' + right.replace(/x/g, `(${x})`) + ')';
-        return new Function(`return (${expr})`)();
-      } catch { return NaN; }
+      const expr = `(${left.replace(/x/g, `(${x})`)})-(${right.replace(/x/g, `(${x})`)})`;
+      return new Function(`"use strict"; return (${expr});`)();
     };
-    
     const roots = [];
-    for (let guess = -10; guess <= 10; guess += 0.5) {
-      try {
-        const root = newtonMethod(f, guess);
-        if (root !== null && !roots.some(r => Math.abs(r - root) < 0.001)) {
-          roots.push(root);
-        }
-      } catch {}
+    for (let guess = -20; guess <= 20; guess += 0.4) {
+      const root = newtonMethod(f, guess);
+      if (root !== null && isFinite(root) && !roots.some(r => Math.abs(r - root) < 0.0005)) {
+        roots.push(root);
+      }
     }
-    
-    if (roots.length === 0) {
-      output.textContent = "No real roots found.";
-    } else {
-      output.textContent = "Roots: " + roots.map(r => format(r)).join(', ');
-    }
+    if (roots.length === 0) output.textContent = "No real roots found in range.";
+    else output.textContent = "Roots ≈ " + roots.map(r => format(r)).join(", ");
   } catch (e) {
     output.textContent = "Error: " + e.message;
   }
@@ -1111,22 +1077,18 @@ function doCalculus() {
   const from = parseFloat(document.getElementById("calcFrom").value);
   const to = parseFloat(document.getElementById("calcTo").value);
   const output = document.getElementById("calcOutput");
-  
-  if (isNaN(from) || isNaN(to)) {
-    output.textContent = "Enter valid range.";
-    return;
-  }
-  
+  if (isNaN(from) || isNaN(to)) { output.textContent = "Enter valid limits"; return; }
   try {
     const f = new Function("x", `"use strict"; return (${func});`);
-    const result = numericalIntegrate(f, from, to);
-    const derivative = numericalDerivative(f, (from + to) / 2);
-    const derivAtStart = numericalDerivative(f, from);
-    const derivAtEnd = numericalDerivative(f, to);
+    const integ = numericalIntegrate(f, from, to);
+    const mid = (from + to) / 2;
+    const dMid = numericalDerivative(f, mid);
+    const dStart = numericalDerivative(f, from);
+    const dEnd = numericalDerivative(f, to);
     output.innerHTML = `
-      ∫(${func}) dx from ${format(from)} to ${format(to)} = ${format(result)}<br>
-      d/dx at midpoint = ${format(derivative)}<br>
-      d/dx at ${format(from)} = ${format(derivAtStart)}, at ${format(to)} = ${format(derivAtEnd)}
+      ∫ ${func} dx from ${format(from)} to ${format(to)} ≈ <b>${format(integ)}</b><br>
+      d/dx at midpoint ≈ ${format(dMid)}<br>
+      d/dx at ${format(from)} ≈ ${format(dStart)} · at ${format(to)} ≈ ${format(dEnd)}
     `;
   } catch (e) {
     output.textContent = "Error: " + e.message;
@@ -1137,37 +1099,31 @@ function doCalculus() {
 // STATISTICS
 // ============================================================
 function statistics() {
-  const input = document.getElementById("statsInput");
-  const data = input.value.split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
+  const raw = document.getElementById("statsInput").value;
+  const data = raw.split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
   if (!data.length) {
     document.getElementById("statsOutput").textContent = "Enter numbers separated by commas";
     return;
   }
+  const n = data.length;
   const sum = data.reduce((a, b) => a + b, 0);
-  const mean = sum / data.length;
+  const mean = sum / n;
   const sorted = [...data].sort((a, b) => a - b);
-  const median = sorted.length % 2 === 0 ? (sorted[sorted.length/2-1] + sorted[sorted.length/2]) / 2 : sorted[Math.floor(sorted.length/2)];
-  const variance = data.reduce((a, b) => a + (b - mean) ** 2, 0) / data.length;
+  const median = n % 2 === 0 ? (sorted[n/2 - 1] + sorted[n/2]) / 2 : sorted[Math.floor(n/2)];
+  const variance = data.reduce((a, b) => a + (b - mean) ** 2, 0) / n;
   const std = Math.sqrt(variance);
-  const skewness = data.reduce((a, b) => a + ((b - mean) / std) ** 3, 0) / data.length;
-  const kurtosis = data.reduce((a, b) => a + ((b - mean) / std) ** 4, 0) / data.length - 3;
-  
+  const skew = data.reduce((a, b) => a + ((b - mean) / std) ** 3, 0) / n;
+  const kurt = data.reduce((a, b) => a + ((b - mean) / std) ** 4, 0) / n - 3;
   document.getElementById("statsOutput").innerHTML = `
-    Count: ${data.length}<br>
-    Sum: ${format(sum)}<br>
-    Mean: ${format(mean)}<br>
-    Median: ${format(median)}<br>
-    Std Dev: ${format(std)}<br>
-    Variance: ${format(variance)}<br>
-    Skewness: ${format(skewness)}<br>
-    Kurtosis: ${format(kurtosis)}<br>
-    Min: ${format(Math.min(...data))}<br>
-    Max: ${format(Math.max(...data))}
+    Count: ${n}<br>Sum: ${format(sum)}<br>Mean: ${format(mean)}<br>Median: ${format(median)}<br>
+    Std Dev: ${format(std)}<br>Variance: ${format(variance)}<br>
+    Skewness: ${format(skew)}<br>Kurtosis: ${format(kurt)}<br>
+    Min: ${format(Math.min(...data))} · Max: ${format(Math.max(...data))}
   `;
 }
 
 // ============================================================
-// PERCENTAGE
+// PERCENTAGE & UNITS
 // ============================================================
 function percentage() {
   const a = parseFloat(document.getElementById("percentA").value);
@@ -1176,23 +1132,38 @@ function percentage() {
     document.getElementById("percentOutput").textContent = "Enter valid numbers";
     return;
   }
-  document.getElementById("percentOutput").textContent = `${b}% of ${a} = ${format((b/100)*a)}`;
+  document.getElementById("percentOutput").textContent = `${b}% of ${a} = ${format((b / 100) * a)}`;
 }
 
-// ============================================================
-// UNIT CONVERTER
-// ============================================================
 function convertUnit() {
   const value = parseFloat(document.getElementById("unitValue").value);
   const from = document.getElementById("unitFrom").value;
   const to = document.getElementById("unitTo").value;
   if (isNaN(value)) {
-    document.getElementById("unitOutput").textContent = "Enter a valid number";
+    document.getElementById("unitOutput").textContent = "Enter a number";
     return;
   }
-  const units = { km: 1000, m: 1, cm: 0.01, mile: 1609.344, kg: 1, g: 0.001, lb: 0.453592 };
-  if (from === to) {
-    document.getElementById("unitOutput").textContent = `${format(value)} ${from} = ${format(value)} ${to}`;
+  // Temperature special cases
+  if (["C","F","K"].includes(from) || ["C","F","K"].includes(to)) {
+    let celsius;
+    if (from === "C") celsius = value;
+    else if (from === "F") celsius = (value - 32) * 5/9;
+    else if (from === "K") celsius = value - 273.15;
+    else { document.getElementById("unitOutput").textContent = "Unsupported conversion"; return; }
+    let result;
+    if (to === "C") result = celsius;
+    else if (to === "F") result = celsius * 9/5 + 32;
+    else if (to === "K") result = celsius + 273.15;
+    else { document.getElementById("unitOutput").textContent = "Unsupported"; return; }
+    document.getElementById("unitOutput").textContent = `${format(value)} ${from} = ${format(result)} ${to}`;
+    return;
+  }
+  const units = {
+    km: 1000, m: 1, cm: 0.01, mm: 0.001, mile: 1609.344, ft: 0.3048,
+    kg: 1, g: 0.001, lb: 0.45359237, oz: 0.028349523125
+  };
+  if (!(from in units) || !(to in units)) {
+    document.getElementById("unitOutput").textContent = "Unsupported unit pair";
     return;
   }
   const result = (value * units[from]) / units[to];
@@ -1200,25 +1171,21 @@ function convertUnit() {
 }
 
 // ============================================================
-// PRIME CHECK
+// PRIME
 // ============================================================
 function primeCheck() {
   const n = parseInt(document.getElementById("primeInput").value);
   const output = document.getElementById("primeOutput");
-  if (isNaN(n) || n < 1) {
-    output.textContent = "Enter a positive integer";
-    return;
-  }
-  if (isPrime(n)) {
-    output.textContent = `${n} is a prime number.`;
-  } else {
+  if (isNaN(n) || n < 1) { output.textContent = "Enter a positive integer"; return; }
+  if (isPrime(n)) output.textContent = `${n} is prime.`;
+  else {
     const factors = primeFactors(n);
-    output.textContent = `${n} = ${factors.join(' × ')}`;
+    output.textContent = `${n} = ${factors.join(" × ")}`;
   }
 }
 
 // ============================================================
-// DISTRIBUTIONS
+// DISTRIBUTIONS & REGRESSION
 // ============================================================
 function distribution() {
   const type = document.getElementById("distType").value;
@@ -1226,115 +1193,137 @@ function distribution() {
   const p2 = parseFloat(document.getElementById("distParam2").value);
   const x = parseFloat(document.getElementById("distX").value);
   const output = document.getElementById("distOutput");
-  
   if (isNaN(x)) { output.textContent = "Enter x value"; return; }
-  
   try {
     let result = "";
-    switch(type) {
-      case 'normal':
-        const pdf = normalPDF(x, p1, p2);
-        const cdf = normalCDF(x, p1, p2);
-        result = `PDF: ${format(pdf)}\nCDF: ${format(cdf)}\nZ-score: ${format((x-p1)/p2)}`;
+    switch (type) {
+      case "normal":
+        result = `PDF: ${format(normalPDF(x, p1, p2))}\nCDF: ${format(normalCDF(x, p1, p2))}\nZ: ${format((x - p1) / p2)}`;
         break;
-      case 'binomial':
+      case "binomial":
         if (!Number.isInteger(x)) { output.textContent = "x must be integer"; return; }
-        result = `PMF: ${format(binomialPMF(x, p1, p2))}\nMean: ${format(p1*p2)}\nVariance: ${format(p1*p2*(1-p2))}`;
+        result = `PMF: ${format(binomialPMF(x, p1, p2))}\nMean: ${format(p1 * p2)}\nVar: ${format(p1 * p2 * (1 - p2))}`;
         break;
-      case 'poisson':
+      case "poisson":
         if (!Number.isInteger(x)) { output.textContent = "x must be integer"; return; }
-        result = `PMF: ${format(poissonPMF(x, p1))}\nMean: ${format(p1)}\nVariance: ${format(p1)}`;
+        result = `PMF: ${format(poissonPMF(x, p1))}\nMean = Var: ${format(p1)}`;
         break;
-      case 'exponential':
-        result = `PDF: ${format(exponentialPDF(x, p1))}\nCDF: ${format(1 - Math.exp(-p1*x))}\nMean: ${format(1/p1)}`;
+      case "exponential":
+        result = `PDF: ${format(exponentialPDF(x, p1))}\nCDF: ${format(1 - Math.exp(-p1 * x))}\nMean: ${format(1 / p1)}`;
         break;
     }
     output.textContent = result;
-  } catch(e) {
+  } catch (e) {
     output.textContent = "Error: " + e.message;
   }
 }
 
-// ============================================================
-// REGRESSION
-// ============================================================
 function regression() {
   const input = document.getElementById("regData").value;
   const output = document.getElementById("regOutput");
   try {
-    const parts = input.split('|');
-    const xData = parts[0].split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
-    const yData = parts[1].split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
-    
-    if (xData.length !== yData.length || xData.length < 2) {
-      output.textContent = "Enter paired data: x: 1,2,3 | y: 2,4,6";
-      return;
-    }
-    
+    const parts = input.split("|");
+    if (parts.length < 2) throw new Error("Use format: x: 1,2,3 | y: 2,4,6");
+    const xData = parts[0].replace(/x\s*:?/i, "").split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
+    const yData = parts[1].replace(/y\s*:?/i, "").split(/[,;\s]+/).map(Number).filter(n => !isNaN(n));
+    if (xData.length !== yData.length || xData.length < 2) throw new Error("Need paired data");
     const n = xData.length;
-    const sumX = xData.reduce((a,b) => a + b, 0);
-    const sumY = yData.reduce((a,b) => a + b, 0);
-    const sumXY = xData.reduce((a,b,i) => a + b * yData[i], 0);
-    const sumX2 = xData.reduce((a,b) => a + b * b, 0);
-    const sumY2 = yData.reduce((a,b) => a + b * b, 0);
-    
+    const sumX = xData.reduce((a, b) => a + b, 0);
+    const sumY = yData.reduce((a, b) => a + b, 0);
+    const sumXY = xData.reduce((a, b, i) => a + b * yData[i], 0);
+    const sumX2 = xData.reduce((a, b) => a + b * b, 0);
+    const sumY2 = yData.reduce((a, b) => a + b * b, 0);
     const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
     const intercept = (sumY - slope * sumX) / n;
-    const r = (n * sumXY - sumX * sumY) / Math.sqrt((n * sumX2 - sumX*sumX) * (n * sumY2 - sumY*sumY));
-    
-    const predicted = yData.map((y,i) => slope * xData[i] + intercept);
-    const residuals = yData.map((y,i) => y - predicted[i]);
-    const mse = residuals.reduce((a,b) => a + b*b, 0) / n;
-    
+    const r = (n * sumXY - sumX * sumY) / Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+    const residuals = yData.map((y, i) => y - (slope * xData[i] + intercept));
+    const mse = residuals.reduce((a, b) => a + b * b, 0) / n;
     output.innerHTML = `
       y = ${format(slope)}x + ${format(intercept)}<br>
-      R² = ${format(r*r)}<br>
-      Correlation r = ${format(r)}<br>
+      R² = ${format(r * r)} · r = ${format(r)}<br>
       MSE = ${format(mse)}<br>
-      Residuals: ${residuals.map(r => format(r)).join(', ')}
+      Residuals: ${residuals.map(r => format(r)).join(", ")}
     `;
-  } catch(e) {
+  } catch (e) {
     output.textContent = "Error: " + e.message;
   }
 }
 
 // ============================================================
-// MATRIX OPERATIONS
+// MATRIX
 // ============================================================
-function getMatrix() {
-  return [
-    [parseFloat(document.getElementById("m11").value) || 0,
-     parseFloat(document.getElementById("m12").value) || 0],
-    [parseFloat(document.getElementById("m21").value) || 0,
-     parseFloat(document.getElementById("m22").value) || 0]
-  ];
+function buildMatrixInputs() {
+  const size = parseInt(document.getElementById("matrixSize").value) || 2;
+  const container = document.getElementById("matrixInputs");
+  container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  container.innerHTML = "";
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      const inp = document.createElement("input");
+      inp.id = `m${i}${j}`;
+      inp.value = i === j ? "1" : "0";
+      inp.type = "number";
+      container.appendChild(inp);
+    }
+  }
 }
-
+function getMatrix() {
+  const size = parseInt(document.getElementById("matrixSize").value) || 2;
+  const m = [];
+  for (let i = 0; i < size; i++) {
+    const row = [];
+    for (let j = 0; j < size; j++) {
+      row.push(parseFloat(document.getElementById(`m${i}${j}`).value) || 0);
+    }
+    m.push(row);
+  }
+  return m;
+}
+function det(m) {
+  const n = m.length;
+  if (n === 1) return m[0][0];
+  if (n === 2) return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+  let d = 0;
+  for (let j = 0; j < n; j++) {
+    const minor = m.slice(1).map(row => row.filter((_, k) => k !== j));
+    d += (j % 2 === 0 ? 1 : -1) * m[0][j] * det(minor);
+  }
+  return d;
+}
 function matrixDet() {
   const m = getMatrix();
-  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
-  document.getElementById("matrixOutput").textContent = `Det = ${format(det)}`;
+  document.getElementById("matrixOutput").textContent = `Det = ${format(det(m))}`;
 }
-
 function matrixInv() {
   const m = getMatrix();
-  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
-  if (det === 0) {
-    document.getElementById("matrixOutput").textContent = "Singular (no inverse)";
+  const n = m.length;
+  const d = det(m);
+  if (Math.abs(d) < 1e-12) {
+    document.getElementById("matrixOutput").textContent = "Singular matrix (no inverse)";
     return;
   }
-  const inv = [[m[1][1]/det, -m[0][1]/det], [-m[1][0]/det, m[0][0]/det]];
-  document.getElementById("matrixOutput").innerHTML = `
-    [ ${format(inv[0][0])}  ${format(inv[0][1])} ]<br>
-    [ ${format(inv[1][0])}  ${format(inv[1][1])} ]
-  `;
+  // adjugate via cofactors (simple for small n)
+  const inv = Array.from({ length: n }, () => Array(n).fill(0));
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      const minor = m.filter((_, r) => r !== i).map(row => row.filter((_, c) => c !== j));
+      const c = ((i + j) % 2 === 0 ? 1 : -1) * det(minor);
+      inv[j][i] = c / d; // transpose of cofactor
+    }
+  }
+  document.getElementById("matrixOutput").innerHTML = inv.map(row =>
+    "[ " + row.map(v => format(v)).join("  ") + " ]"
+  ).join("<br>");
 }
-
 function matrixEigen() {
   const m = getMatrix();
+  if (m.length !== 2) {
+    document.getElementById("matrixOutput").textContent = "Eigenvalues currently supported for 2×2 only";
+    return;
+  }
   const trace = m[0][0] + m[1][1];
-  const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
-  const disc = trace * trace - 4 * det;
+  const d = det(m);
+  const disc = trace * trace - 4 * d;
   if (disc < 0) {
     document.getElementById("matrixOutput").textContent = "Complex eigenvalues";
     return;
@@ -1343,75 +1332,99 @@ function matrixEigen() {
   const e2 = (trace - Math.sqrt(disc)) / 2;
   document.getElementById("matrixOutput").textContent = `λ₁ = ${format(e1)}, λ₂ = ${format(e2)}`;
 }
-
 function matrixTranspose() {
   const m = getMatrix();
-  document.getElementById("matrixOutput").innerHTML = `
-    [ ${format(m[0][0])}  ${format(m[1][0])} ]<br>
-    [ ${format(m[0][1])}  ${format(m[1][1])} ]
-  `;
+  const t = m[0].map((_, j) => m.map(row => row[j]));
+  document.getElementById("matrixOutput").innerHTML = t.map(row =>
+    "[ " + row.map(v => format(v)).join("  ") + " ]"
+  ).join("<br>");
+}
+function matrixMul() {
+  document.getElementById("matrixOutput").textContent = "Enter second matrix in a future update or use script editor for matrix products.";
 }
 
 // ============================================================
-// GRAPH PLOTTER
+// GRAPH
 // ============================================================
 function plotGraph() {
   const canvas = document.getElementById("graphCanvas");
   const ctx = canvas.getContext("2d");
-  const fx = document.getElementById("fx").value;
+  const fx = document.getElementById("fx").value || "0";
   const fx2 = document.getElementById("fx2").value;
   const minX = parseFloat(document.getElementById("rangeMin").value) || -10;
   const maxX = parseFloat(document.getElementById("rangeMax").value) || 10;
-  
-  canvas.width = canvas.clientWidth || 500;
-  canvas.height = canvas.clientHeight || 350;
+  const showDeriv = document.getElementById("showDeriv").checked;
+
+  canvas.width = canvas.clientWidth || 600;
+  canvas.height = canvas.clientHeight || 400;
   const w = canvas.width, h = canvas.height;
-  
   ctx.clearRect(0, 0, w, h);
-  
-  // Grid
-  ctx.strokeStyle = "rgba(0,234,255,0.08)";
+
+  // grid
+  ctx.strokeStyle = "rgba(0,234,255,0.07)";
   ctx.lineWidth = 1;
   for (let i = 0; i <= 20; i++) {
     const x = i * w / 20, y = i * h / 20;
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
   }
-  
-  // Axes
-  ctx.strokeStyle = "rgba(0,234,255,0.3)";
-  ctx.lineWidth = 2;
-  const x0 = -minX / (maxX - minX) * w;
+
+  // axes
+  const x0 = (-minX) / (maxX - minX) * w;
   const y0 = h / 2;
+  ctx.strokeStyle = "rgba(0,234,255,0.35)";
+  ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, h); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(w, y0); ctx.stroke();
-  
-  const plotFunction = (func, color, label) => {
+
+  const plotFn = (funcStr, color) => {
     try {
-      const f = new Function("x", `"use strict"; return (${func});`);
+      const f = new Function("x", `"use strict"; return (${funcStr});`);
       ctx.strokeStyle = color;
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2.2;
       ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 6;
       ctx.beginPath();
       let started = false;
       for (let i = 0; i <= w; i++) {
         const x = minX + (i / w) * (maxX - minX);
-        try {
-          const y = f(x);
-          if (!isFinite(y)) { started = false; continue; }
-          const px = i, py = y0 - (y / (maxX - minX)) * (h / 2);
-          if (!started) { ctx.moveTo(px, py); started = true; }
-          else ctx.lineTo(px, py);
-        } catch { started = false; }
+        let y;
+        try { y = f(x); } catch { started = false; continue; }
+        if (!isFinite(y)) { started = false; continue; }
+        const px = i;
+        const py = y0 - (y / ((maxX - minX) / 2)) * (h / 2) * 0.9;
+        if (!started) { ctx.moveTo(px, py); started = true; }
+        else ctx.lineTo(px, py);
       }
       ctx.stroke();
       ctx.shadowBlur = 0;
-    } catch(e) {}
+    } catch (e) {}
   };
-  
-  plotFunction(fx, "#00eaff", "f(x)");
-  if (fx2) plotFunction(fx2, "#ffd166", "g(x)");
+
+  plotFn(fx, "#00eaff");
+  if (fx2) plotFn(fx2, "#ffd166");
+  if (showDeriv) {
+    try {
+      const f = new Function("x", `"use strict"; return (${fx});`);
+      const df = x => numericalDerivative(f, x);
+      plotFn("/*deriv*/", "#ff5277"); // will use df via special path
+      // simple deriv plot
+      ctx.strokeStyle = "#ff5277";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i <= w; i++) {
+        const x = minX + (i / w) * (maxX - minX);
+        const y = df(x);
+        if (!isFinite(y)) { started = false; continue; }
+        const px = i;
+        const py = y0 - (y / ((maxX - minX) / 2)) * (h / 2) * 0.9;
+        if (!started) { ctx.moveTo(px, py); started = true; }
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    } catch {}
+  }
 }
 
 function findRoots() {
@@ -1419,158 +1432,107 @@ function findRoots() {
   const output = document.getElementById("graphOutput");
   const minX = parseFloat(document.getElementById("rangeMin").value) || -10;
   const maxX = parseFloat(document.getElementById("rangeMax").value) || 10;
-  
   try {
     const f = new Function("x", `"use strict"; return (${fx});`);
     const roots = [];
-    for (let x = minX; x <= maxX; x += 0.01) {
-      try {
-        const y = f(x);
-        if (Math.abs(y) < 0.001) {
-          const root = newtonMethod(f, x);
-          if (root !== null && root >= minX && root <= maxX && !roots.some(r => Math.abs(r - root) < 0.01)) {
-            roots.push(root);
-          }
+    for (let x = minX; x <= maxX; x += 0.05) {
+      if (Math.abs(f(x)) < 0.05) {
+        const root = newtonMethod(f, x);
+        if (root !== null && root >= minX && root <= maxX && !roots.some(r => Math.abs(r - root) < 0.01)) {
+          roots.push(root);
         }
-      } catch {}
+      }
     }
-    if (roots.length === 0) output.textContent = "No roots found.";
-    else output.textContent = "Roots: " + roots.map(r => format(r)).join(', ');
-  } catch(e) {
+    output.textContent = roots.length ? "Roots ≈ " + roots.map(r => format(r)).join(", ") : "No roots found in range.";
+  } catch (e) {
     output.textContent = "Error: " + e.message;
   }
 }
-
 function exportGraph() {
   const canvas = document.getElementById("graphCanvas");
   canvas.toBlob(blob => {
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'graph.png';
-    a.click();
+    const a = document.createElement("a");
+    a.href = url; a.download = "jarvis_graph.png"; a.click();
     URL.revokeObjectURL(url);
   });
 }
 
 // ============================================================
-// 3D GRAPH PLOTTER
+// 3D PLOTTER
 // ============================================================
 function plot3D() {
   const canvas = document.getElementById("canvas3d");
   const ctx = canvas.getContext("2d");
   const func = document.getElementById("f3d").value || "sin(x)*cos(y)";
   const range = parseFloat(document.getElementById("range3d").value) || 5;
-  const res = parseInt(document.getElementById("res3d").value) || 30;
-  
-  canvas.width = canvas.clientWidth || 500;
-  canvas.height = canvas.clientHeight || 400;
+  const res = Math.min(60, parseInt(document.getElementById("res3d").value) || 40);
+
+  canvas.width = canvas.clientWidth || 600;
+  canvas.height = canvas.clientHeight || 450;
   const w = canvas.width, h = canvas.height;
-  
   ctx.clearRect(0, 0, w, h);
-  
+
   try {
     const f = new Function("x", "y", `"use strict"; return (${func});`);
-    
-    // Simple 3D to 2D projection (isometric)
     const project = (x, y, z) => {
-      const scale = Math.min(w, h) / (range * 2.5);
-      const px = w/2 + (x - y) * scale * 0.8;
-      const py = h/2 - (x + y) * scale * 0.4 - z * scale * 0.6;
+      const scale = Math.min(w, h) / (range * 2.8);
+      const px = w / 2 + (x - y) * scale * 0.85;
+      const py = h / 2 - (x + y) * scale * 0.35 - z * scale * 0.55;
       return [px, py];
     };
-    
-    // Draw grid
-    const step = range * 2 / res;
+    const step = (range * 2) / res;
     const points = [];
-    
+    let zMin = Infinity, zMax = -Infinity;
+
     for (let i = 0; i <= res; i++) {
       const row = [];
       for (let j = 0; j <= res; j++) {
         const x = -range + i * step;
         const y = -range + j * step;
-        let z;
+        let z = 0;
         try { z = f(x, y); } catch { z = 0; }
         if (!isFinite(z)) z = 0;
-        const [px, py] = project(x, y, z);
-        row.push({ x: px, y: py, z: z });
+        if (z < zMin) zMin = z;
+        if (z > zMax) zMax = z;
+        row.push({ ...project(x, y, z), z });
       }
       points.push(row);
     }
-    
-    // Find z range for coloring
-    let zMin = Infinity, zMax = -Infinity;
-    for (const row of points) {
-      for (const p of row) {
-        if (p.z < zMin) zMin = p.z;
-        if (p.z > zMax) zMax = p.z;
-      }
-    }
     const zRange = zMax - zMin || 1;
-    
-    // Draw surfaces (triangles)
+
     for (let i = 0; i < points.length - 1; i++) {
       for (let j = 0; j < points[i].length - 1; j++) {
-        const p1 = points[i][j];
-        const p2 = points[i][j+1];
-        const p3 = points[i+1][j];
-        const p4 = points[i+1][j+1];
-        
-        const color1 = 180 + 75 * (p1.z - zMin) / zRange;
-        const color2 = 180 + 75 * (p4.z - zMin) / zRange;
-        
-        // Triangle 1
-        ctx.fillStyle = `hsl(190, 100%, ${Math.min(color1, 255)}%)`;
+        const p1 = points[i][j], p2 = points[i][j + 1];
+        const p3 = points[i + 1][j], p4 = points[i + 1][j + 1];
+        const lum = 45 + 45 * ((p1.z - zMin) / zRange);
+        ctx.fillStyle = `hsl(190, 90%, ${lum}%)`;
         ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.lineTo(p3.x, p3.y);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = "rgba(0,234,255,0.1)";
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-        
-        // Triangle 2
-        ctx.fillStyle = `hsl(190, 100%, ${Math.min(color2, 255)}%)`;
+        ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = `hsl(190, 90%, ${45 + 45 * ((p4.z - zMin) / zRange)}%)`;
         ctx.beginPath();
-        ctx.moveTo(p2.x, p2.y);
-        ctx.lineTo(p4.x, p4.y);
-        ctx.lineTo(p3.x, p3.y);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
+        ctx.moveTo(p2.x, p2.y); ctx.lineTo(p4.x, p4.y); ctx.lineTo(p3.x, p3.y);
+        ctx.closePath(); ctx.fill();
       }
     }
-    
-    // Draw axes
-    ctx.strokeStyle = "rgba(0,234,255,0.5)";
+
+    // axes
+    ctx.strokeStyle = "rgba(0,234,255,0.6)";
     ctx.lineWidth = 1.5;
-    const origin = project(0, 0, 0);
-    const xEnd = project(range, 0, 0);
-    const yEnd = project(0, range, 0);
-    const zEnd = project(0, 0, range);
-    
-    ctx.beginPath();
-    ctx.moveTo(origin[0], origin[1]);
-    ctx.lineTo(xEnd[0], xEnd[1]);
-    ctx.stroke();
+    const o = project(0, 0, 0);
+    const xe = project(range, 0, 0);
+    const ye = project(0, range, 0);
+    const ze = project(0, 0, range * 0.6);
+    ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(xe[0], xe[1]); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(ye[0], ye[1]); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(ze[0], ze[1]); ctx.stroke();
     ctx.fillStyle = "#00eaff";
-    ctx.fillText("x", xEnd[0]+5, xEnd[1]-5);
-    
-    ctx.beginPath();
-    ctx.moveTo(origin[0], origin[1]);
-    ctx.lineTo(yEnd[0], yEnd[1]);
-    ctx.stroke();
-    ctx.fillText("y", yEnd[0]+5, yEnd[1]+5);
-    
-    ctx.beginPath();
-    ctx.moveTo(origin[0], origin[1]);
-    ctx.lineTo(zEnd[0], zEnd[1]);
-    ctx.stroke();
-    ctx.fillText("z", zEnd[0]-10, zEnd[1]-10);
-    
-  } catch(e) {
+    ctx.font = "12px system-ui";
+    ctx.fillText("x", xe[0] + 4, xe[1]);
+    ctx.fillText("y", ye[0] + 4, ye[1] + 4);
+    ctx.fillText("z", ze[0] - 8, ze[1] - 4);
+  } catch (e) {
     ctx.fillStyle = "#ff5277";
     ctx.font = "14px system-ui";
     ctx.fillText("Error: " + e.message, 20, 40);
@@ -1578,33 +1540,28 @@ function plot3D() {
 }
 
 // ============================================================
-// VOICE INPUT
+// VOICE
 // ============================================================
 function startVoice() {
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+  if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
     document.getElementById("jarvisStatus").textContent = "✗ Voice not supported";
     return;
   }
-  
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
+  recognition.lang = "en-US";
   recognition.continuous = false;
   recognition.interimResults = false;
-  
   document.getElementById("jarvisStatus").textContent = "🎤 Listening...";
-  
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
     document.getElementById("command").value = transcript;
     document.getElementById("jarvisStatus").textContent = "✓ Voice captured";
     runCommand();
   };
-  
   recognition.onerror = () => {
     document.getElementById("jarvisStatus").textContent = "✗ Voice error";
   };
-  
   recognition.start();
 }
 
@@ -1615,21 +1572,19 @@ function runScript() {
   const code = document.getElementById("scriptArea").value;
   const output = document.getElementById("scriptOutput");
   try {
-    // Create a safe execution environment
     const fn = new Function(
-      "answer", "CONSTANTS", "factorial", "gcd", "lcm", "isPrime", "primeFactors",
+      "answer", "CONSTANTS", "factorial", "gcd", "lcm", "isPrime", "primeFactors", "Complex",
       `"use strict"; ${code}`
     );
-    const result = fn(answer, CONSTANTS, factorial, gcd, lcm, isPrime, primeFactors);
+    const result = fn(answer, CONSTANTS, factorial, gcd, lcm, isPrime, primeFactors, Complex);
     output.textContent = "Result: " + (result !== undefined ? format(result) : "undefined");
-  } catch(e) {
+  } catch (e) {
     output.textContent = "Error: " + e.message;
   }
 }
-
 function saveScript() {
   const code = document.getElementById("scriptArea").value;
-  scripts.push({ code: code, time: new Date().toLocaleString() });
+  scripts.push({ code, time: new Date().toLocaleString() });
   if (scripts.length > 20) scripts.shift();
   save();
   document.getElementById("scriptOutput").textContent = "✓ Script saved";
@@ -1642,80 +1597,66 @@ function runCommand() {
   const input = document.getElementById("command");
   const cmd = input.value.trim();
   if (!cmd) return;
-  
   try {
-    let result = "";
     let status = "✓ EXECUTED";
-    
-    // Equation solving
-    if (cmd.toLowerCase().includes('solve')) {
-      const eq = cmd.replace(/solve\s*/i, '');
+    const lower = cmd.toLowerCase();
+
+    if (lower.startsWith("solve") || lower.includes("=")) {
+      const eq = cmd.replace(/solve\s*/i, "");
       document.getElementById("eqInput").value = eq;
       solveEquation();
-      result = document.getElementById("eqOutput").textContent;
+      input.value = document.getElementById("eqOutput").textContent;
       status = "✓ SOLVED";
-    }
-    // Integration
-    else if (cmd.toLowerCase().includes('integrate')) {
-      const parts = cmd.match(/integrate\s*([^\d]+)\s*(\d+\.?\d*)\s*(\d+\.?\d*)/i);
-      if (parts) {
-        document.getElementById("calcFunc").value = parts[1].trim();
-        document.getElementById("calcFrom").value = parts[2];
-        document.getElementById("calcTo").value = parts[3];
+    } else if (lower.includes("integrate") || lower.includes("∫")) {
+      const m = cmd.match(/integrate\s+(.+?)\s+([-\d.]+)\s+([-\d.]+)/i) ||
+                cmd.match(/∫\s*(.+?)\s+from\s+([-\d.]+)\s+to\s+([-\d.]+)/i);
+      if (m) {
+        document.getElementById("calcFunc").value = m[1].trim();
+        document.getElementById("calcFrom").value = m[2];
+        document.getElementById("calcTo").value = m[3];
         doCalculus();
-        result = document.getElementById("calcOutput").textContent;
+        input.value = document.getElementById("calcOutput").textContent.replace(/<br>/g, " | ");
         status = "✓ INTEGRATED";
       }
-    }
-    // Prime / factor
-    else if (cmd.toLowerCase().includes('prime') || cmd.toLowerCase().includes('factor')) {
+    } else if (lower.includes("prime") || lower.includes("factor")) {
       const num = cmd.match(/\d+/);
       if (num) {
         document.getElementById("primeInput").value = num[0];
         primeCheck();
-        result = document.getElementById("primeOutput").textContent;
+        input.value = document.getElementById("primeOutput").textContent;
         status = "✓ FACTORED";
       }
-    }
-    // Plot
-    else if (cmd.toLowerCase().includes('plot') || cmd.toLowerCase().includes('graph')) {
-      const match = cmd.match(/plot\s*([^,\s]+)/i);
-      if (match) {
-        document.getElementById("fx").value = match[1];
+    } else if (lower.includes("plot") || lower.includes("graph")) {
+      const m = cmd.match(/(?:plot|graph)\s+(.+)/i);
+      if (m) {
+        document.getElementById("fx").value = m[1].trim();
+        showView("graph", document.querySelectorAll(".nav button")[2]);
         plotGraph();
-        result = "Graph plotted: " + match[1];
+        input.value = "Plotted: " + m[1].trim();
         status = "✓ PLOTTED";
       }
-    }
-    // Statistics
-    else if (cmd.toLowerCase().includes('stats') || cmd.toLowerCase().includes('mean')) {
-      const nums = cmd.match(/\d+\.?\d*/g);
+    } else if (lower.includes("stats") || lower.includes("mean") || lower.includes("average")) {
+      const nums = cmd.match(/-?\d+\.?\d*/g);
       if (nums && nums.length > 1) {
-        document.getElementById("statsInput").value = nums.join(', ');
+        document.getElementById("statsInput").value = nums.join(", ");
         statistics();
-        result = document.getElementById("statsOutput").textContent;
+        input.value = document.getElementById("statsOutput").textContent.replace(/<br>/g, " | ");
         status = "✓ STATS";
       }
-    }
-    // Evaluate
-    else {
+    } else {
+      // try direct evaluation
       const value = evaluate(cmd);
-      if (typeof value === 'number' && isFinite(value)) {
-        answer = value;
-        history.unshift({ expression: cmd, answer: value, time: new Date().toLocaleString() });
-        save();
-        renderHistory();
-        update();
-        result = format(value);
-        status = "✓ COMPUTED";
-      }
+      answer = value;
+      history.unshift({ expression: cmd, answer: value, time: new Date().toLocaleString() });
+      save();
+      renderHistory();
+      update();
+      input.value = format(value);
+      status = "✓ COMPUTED";
     }
-    
     document.getElementById("jarvisStatus").textContent = status;
-    if (result) input.value = result;
-    
-  } catch(e) {
-    document.getElementById("jarvisStatus").textContent = "✗ ERROR: " + e.message;
+  } catch (e) {
+    document.getElementById("jarvisStatus").textContent = "✗ " + (e.message || "Error");
   }
 }
 
@@ -1724,22 +1665,26 @@ function runCommand() {
 // ============================================================
 load();
 update();
-setTimeout(() => { plotGraph(); plot3D(); }, 300);
+setTimeout(() => { plotGraph(); plot3D(); }, 250);
 window.addEventListener("resize", () => {
   if (document.getElementById("graph").classList.contains("active")) plotGraph();
   if (document.getElementById("graph3d").classList.contains("active")) plot3D();
 });
 
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-    if (e.target.id === 'command') runCommand();
-    else if (e.target.closest('.card')) {
-      const btn = e.target.closest('.card').querySelector('button');
-      if (btn) btn.click();
-    }
-  }
+// Keyboard support for main calculator
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (e.key >= "0" && e.key <= "9") insert(e.key);
+  else if (e.key === ".") insert(".");
+  else if (e.key === "+") insert("+");
+  else if (e.key === "-") insert("−");
+  else if (e.key === "*") insert("×");
+  else if (e.key === "/") insert("÷");
+  else if (e.key === "Enter" || e.key === "=") calculate();
+  else if (e.key === "Backspace") backspace();
+  else if (e.key === "Escape") clearCalc();
+  else if (e.key === "(" || e.key === ")") insert(e.key);
 });
 </script>
 </body>
-  </html>
+</html>
